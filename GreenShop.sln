@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShop", "GreenShop\GreenShop.csproj", "{C2C52AAB-BF32-4907-83C8-58E0C84E5AF0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2C52AAB-BF32-4907-83C8-58E0C84E5AF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2C52AAB-BF32-4907-83C8-58E0C84E5AF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2C52AAB-BF32-4907-83C8-58E0C84E5AF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2C52AAB-BF32-4907-83C8-58E0C84E5AF0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D70CF4F-5F7E-453D-94FC-E4E3F81D96E1}
+	EndGlobalSection
+EndGlobal
