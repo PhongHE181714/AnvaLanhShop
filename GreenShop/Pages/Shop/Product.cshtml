@@ -1,0 +1,330 @@
+﻿@page
+@model GreenShop.Pages.Shop.ProductModel
+@{
+    ViewBag.Title = "Shop Page";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<head>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" rel="stylesheet">
+	<style>
+		.product{
+			border: 1px solid #e6e6e6; /* Add border */
+			border-radius: 8px; /* Rounded corners */
+		}
+		.img-prod {
+			display: inline-block;
+			width: 100%; /* Ensure full width within the container */
+			height: 240px; /* Adjust height based on design */
+			position: relative;
+			overflow: hidden;
+			border: 1px solid #e6e6e6; /* Add border */
+			border-radius: 8px; /* Rounded corners */
+		}
+
+			.img-prod img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+		.status {
+			position: absolute;
+			top: 10px; /* Position rating at the top */
+			left: 10px;
+			color: white;
+			background: rgba(139, 195, 74, 0.9); /* Green background */
+			padding: 4px 10px; /* Adjust padding for better spacing */
+			border-radius: 3px;
+			font-size: 14px;
+			width: auto; /* Automatically adjust width based on content */
+			height: auto; /* Prevent stretching */
+			display: flex; /* Use flexbox for horizontal alignment */
+			align-items: center; /* Vertically center content */
+			justify-content: space-between; /* Ensure rating and star align horizontally */
+		}
+
+			.status span {
+				margin-right: 4px; /* Space between the rate and asterisk */
+			}
+
+		.overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.3);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		.img-prod:hover .overlay {
+			opacity: 1;
+		}
+
+		.hero-wrap.hero-bread {
+			width: 100vw;
+			position: relative;
+			left: 50%;
+			right: 50%;
+			margin-left: -50vw;
+			margin-right: -50vw;
+			overflow: hidden;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		.list-group-item-action {
+			cursor: pointer;
+		}
+
+			.list-group-item-action:hover {
+				background-color: #f1f1f1;
+			}
+
+		h5, h6 {
+			font-weight: bold;
+		}
+
+		.filter-section {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-bottom: 20px;
+		}
+
+		.filters {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			width: 100%;
+			max-width: 1200px;
+		}
+
+		.filters-label {
+			font-size: 18px;
+			font-weight: bold;
+			margin-bottom: 10px;
+			text-align: left;
+			width: 100%;
+		}
+
+		.filter-btn {
+			background-color: #f8f9fa;
+			border: 2px solid #ddd;
+			padding: 8px 16px;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 5px;
+			transition: background-color 0.3s ease;
+		}
+
+			.filter-btn:hover {
+				background-color: #e9ecef;
+			}
+
+		.price-range-filter {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+
+		#price-slider {
+			width: 200px;
+			margin-top: 10px;
+		}
+
+		#price-value {
+			margin-top: 5px;
+			font-size: 14px;
+		}
+
+		.search-box input {
+			padding: 8px;
+			border: 2px solid #ddd;
+			border-radius: 5px;
+			font-size: 16px;
+			width: 250px;
+		}
+
+			.search-box input:focus {
+				outline: none;
+				border-color: #28a745;
+			}
+
+	</style>
+</head>
+<body class="goto-here" onload="foo()">
+	<div class="hero-wrap hero-bread" style="background-image: url('/img/ban-sao-ban-sao-ban-sao-ban-sao-img_7868-8993.jpeg');">
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-center justify-content-center">
+				<div class="col-md-9 ftco-animate text-center">
+					<p class="breadcrumbs"><span class="mr-2"><a href="~/Shop">Trang chủ</a></span> <span>Sản Phẩm</span></p>
+					<h1 class="mb-0 bread">EcoNest</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="ftco-section">
+		<div class="container">
+
+
+			<div class="row">
+				<!-- Products Display -->
+				<div class="col-md-12">
+					<div class="row">
+						@if (!Model.Product.Any())
+						{
+							<div class="col-md-12 text-center">
+								<img src="https://psc.com.bd/catalog/view/theme/paradise_scientific/image/no-products-found.png" alt="No Products Found" class="img-fluid" style="max-width: 500px;">
+								<p>Không có sản phầm</p>
+								<br />
+							</div>
+						}
+						else
+						{														
+							<div class="container">
+								<div class="row justify-content-center mb-3 pb-3">
+									<div class="col-md-12 heading-section text-center ftco-animate">
+										<h2 class="mb-4">Sản Phẩm EcoNest</h2>
+									</div>
+								</div>
+							</div>
+							@foreach (var product in Model.ProductT)
+							{
+								<div class="col-md-6 col-lg-3 ftco-animate">
+									<div class="product">
+										<a href="ProductDetails?id=@product.Id" class="img-prod">
+											<img class="img-fluid"
+												 src="@product.Image">
+											<span class="status">@Math.Round(product.Rate, 1) *</span>
+											<div class="overlay"></div>
+										</a>
+										<div class="text py-3 pb-4 px-3 text-center">
+											<h3><a href="#">@product.Name</a></h3>
+											<div class="d-flex">
+												<div class="pricing">
+													<p class="price"><span class="mr-2 price-dc">@(product.Price * 10 / 8) VNĐ</span><span class="price-sale">@product.Price VNĐ</span></p>
+												</div>
+											</div>
+											<div class="bottom-area d-flex px-3">
+												<div class="m-auto d-flex">
+													<a href="ProductDetails?id=@product.Id" class="add-to-cart d-flex justify-content-center align-items-center text-center" title="Xem chi tiết sản phẩm">
+														<span><i class="ion-ios-menu"></i></span>
+													</a>
+													@if (ViewContext.HttpContext.Request.Cookies["AuthToken"] != null)
+													{
+														<a href="AddToCart?changeAction=1&productId=@product.Id" class="buy-now d-flex justify-content-center align-items-center mx-1" title="Thêm vào giỏ hàng">
+															<span><i class="ion-ios-cart"></i></span>
+														</a>
+													}
+													else
+													{
+														<a href="~/Login" class="buy-now d-flex justify-content-center align-items-center mx-1" title="Đăng nhập để mua hàng">
+															<span><i class="ion-ios-cart"></i></span>
+														</a>
+													}
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+							<div class="container">
+								<div class="row justify-content-center mb-3 pb-3">
+									<div class="col-md-12 heading-section text-center ftco-animate">
+										<h2 class="mb-4">Combo Khuyến Mãi</h2>
+									</div>
+								</div>
+							</div>
+							@foreach (var product in Model.ProductC)
+							{
+								<div class="col-md-6 col-lg-3 ftco-animate">
+									<div class="product">
+										<a href="ProductDetails?id=@product.Id" class="img-prod">
+											<img class="img-fluid"
+												 src="@product.Image"/>
+											<span class="status">@Math.Round(product.Rate, 1) *</span>
+											<div class="overlay"></div>
+										</a>
+										<div class="text py-3 pb-4 px-3 text-center">
+											<h3><a href="#">@product.Name</a></h3>
+											<div class="d-flex">
+												<div class="pricing">
+													<p class="price"><span class="mr-2 price-dc">@(product.Price * 10 / 8) VNĐ</span><span class="price-sale">@product.Price VNĐ</span></p>
+												</div>
+											</div>
+											<div class="bottom-area d-flex px-3">
+												<div class="m-auto d-flex">
+													<a href="ProductDetails?id=@product.Id" class="add-to-cart d-flex justify-content-center align-items-center text-center" title="Xem chi tiết sản phẩm">
+														<span><i class="ion-ios-menu"></i></span>
+													</a>
+													@if (ViewContext.HttpContext.Request.Cookies["AuthToken"] != null)
+													{
+														<a href="AddToCart?changeAction=1&productId=@product.Id" class="buy-now d-flex justify-content-center align-items-center mx-1" title="Thêm vào giỏ hàng">
+															<span><i class="ion-ios-cart"></i></span>
+														</a>
+													}
+													else
+													{
+														<a href="~/Login" class="buy-now d-flex justify-content-center align-items-center mx-1" title="Đăng nhập để mua hàng">
+															<span><i class="ion-ios-cart"></i></span>
+														</a>
+													}
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						}
+					</div>
+
+					<div class="row mt-5">
+						<div class="col text-center">
+							<div class="block-27">
+								@{
+									var max = ViewBag.pageLength;
+									var page = ViewBag.page;
+									var next = page + 1;
+									var pre = page - 1;
+								}
+								<ul>
+									@if (page > 1)
+									{
+										<li><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = pre, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">Pre</a></li>
+									}
+
+									@for (int i = 1; i <= max; i++)
+									{
+										@if (page == i)
+										{
+											<li class="active"><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = i, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">@i</a></li>
+										}
+										else
+										{
+											<li><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = i, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">@i</a></li>
+										}
+									}
+									@if (page < max)
+									{
+										<li><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = next, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">Next</a></li>
+									}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+
+</body>

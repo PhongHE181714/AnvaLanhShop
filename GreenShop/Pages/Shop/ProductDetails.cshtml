@@ -1,0 +1,650 @@
+﻿@page
+@model GreenShop.Pages.Shop.ProductDetailsModel
+
+@{
+	Layout = "~/Pages/Shared/_Layout.cshtml";
+
+}
+<head>
+	<style>
+		/* General Typography and Spacing */
+		h4, h5, h6 {
+			font-weight: bold;
+			margin-bottom: 20px;
+			font-family: 'Arial', sans-serif;
+		}
+
+		label {
+			font-size: 16px;
+			font-weight: 600;
+			color: #333;
+		}
+
+		.form-control {
+			font-size: 16px;
+			padding: 10px;
+			border-radius: 5px;
+			border: 1px solid #ddd;
+		}
+
+			.form-control:focus {
+				border-color: #28a745;
+				box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+				outline: none;
+			}
+
+		.review-box {
+			background-color: #f8f9fa;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			padding: 20px;
+			margin-bottom: 30px;
+		}
+
+		.rating a {
+			font-size: 20px;
+			color: #f0ad4e;
+			text-decoration: none;
+			margin-right: 5px;
+		}
+
+			.rating a:hover,
+			.rating a.active {
+				color: #ffca2c;
+			}
+
+		/* Customer Reviews Styling */
+		.comment-box {
+			background-color: #f8f9fa;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			padding: 15px;
+			margin-bottom: 15px;
+		}
+
+			.comment-box .rating a {
+				font-size: 18px;
+				color: #f0ad4e;
+			}
+
+				.comment-box .rating a.active {
+					color: #ffca2c;
+				}
+
+		.comment-content {
+			margin-top: 10px;
+		}
+
+		.comment-text {
+			font-size: 16px;
+			color: #555;
+		}
+
+		.comment-edit-form {
+			margin-top: 10px;
+		}
+
+		.comment-box img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+		}
+
+		.btn-group .btn {
+			font-size: 14px;
+			margin-right: 5px;
+			padding: 8px 12px;
+		}
+
+	</style>
+</head>
+
+<body class="goto-here">
+
+	<div class="hero-wrap hero-bread" style="background-image: url('/img/ban-sao-ban-sao-ban-sao-ban-sao-img_7868-8993.jpeg');">
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-center justify-content-center">
+				<div class="col-md-9 text-center">
+					<p class="breadcrumbs">
+						<span class="mr-2"><a href="~/Shop">Trang chủ</a></span>
+					</p>
+					<h1 class="mb-0 bread">Sản phẩm</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 mb-5">
+					<a href="images/product_image.jpg" class="image-popup">
+						<img src="@Model.Product.Image" class="img-fluid" alt="Product Image">
+					</a>
+				</div>
+				<div class="col-lg-6 product-details pl-md-5">
+					<h3>@Model.Product.Name</h3>
+					<div class="rating d-flex">
+						@{
+							var fullStars = (int)Math.Floor(Model.Product.Rate); // Lấy số sao đầy đủ (phần nguyên)
+							var totalStars = 5; // Tổng số sao là 5
+							var remainingStars = totalStars - fullStars; // Số sao outline
+							var decimalRate = Model.Product.Rate - fullStars; // Lấy phần thập phân của rate
+						}
+						<p class="text-left mr-4">
+							@if (@Model.Comments.Count != 0)
+							{
+								<a class="mr-2">@Math.Round(Model.Product.Rate, 1)</a> <!-- Hiển thị rate với 1 số thập phân -->
+								@for (int i = 0; i < fullStars; i++)
+								{
+									<a href=""><span class="ion-ios-star"></span></a> <!-- Hiển thị sao đầy đủ -->
+								}
+								@for (int i = 0; i < remainingStars; i++)
+								{
+									<a href=""><span class="ion-ios-star-outline"></span></a> <!-- Hiển thị sao outline -->
+								}
+							}
+							else
+							{
+								@for (int i = 0; i < 5; i++)
+								{
+									<a href=""><span class="ion-ios-star-outline"></span></a> <!-- Hiển thị sao outline -->
+								}
+							}
+						</p>
+						<p class="text-left mr-4">
+							<a class="mr-2" style="color: #000;">@Model.Comments.Count <span style="color: #bbb;">Lượt đánh giá</span></a>
+						</p>
+
+					</div>
+					<p class="price"><span>@Model.Product.Price VND</span></p>
+					<p>
+						@Model.Product.Description
+					</p>
+					<div class="row mt-4">
+						<div class="col-md-6">
+							<div class="form-group d-flex">
+								<div class="select-wrap">
+									<div class="icon"><span class="ion-ios-arrow-down"></span></div>
+									<select class="form-control">
+										<option value="">Nhỏ</option>
+										<option value="">Vừa</option>
+										<option value="">To</option>
+										<option value="">Rất To</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="w-100"></div>
+						<div class="input-group col-md-6 d-flex mb-3">
+
+							<input type="number" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="@Model.Product.Quantity">
+
+						</div>
+						<div class="w-100"></div>
+						<div class="col-md-12">
+							<p style="color: #000;">@Model.Product.Quantity sản phẩm có sẵn</p>
+						</div>
+					</div>
+					<p>
+						@if (ViewContext.HttpContext.Request.Cookies["AuthToken"] != null)
+						{
+
+							<a href="" id="addToCartLink" class="btn btn-black py-3 px-5">Thêm vào giỏ hàng</a>
+
+						}
+						else
+						{
+							<a href="~/Login" class="btn btn-black py-3 px-5">Thêm vào giỏ hàng</a>
+						}
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section">
+		<div class="container">
+			<h4 class="mb-4">Đánh giá sản phẩm</h4>
+			@if (ViewContext.HttpContext.Request.Cookies["AuthToken"] != null)
+			{
+				<form class="review-box p-4" action="~/Comment/AddComment">
+					<div class="form-group">
+						<label for="rating">Đánh giá chất lượng</label>
+						<div id="rating" class="rating">
+							<a href="#" class="star" onclick="addStar(1)" data-value="1"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(2)" data-value="2"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(3)" data-value="3"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(4)" data-value="4"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(5)" data-value="5"><span class="ion-ios-star-outline"></span></a>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="comment">Bình luận</label>
+						<textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Điền đánh giá của bạn" required></textarea>
+					</div>
+					<input type="hidden" id="rate" name="rate" />
+					<input type="hidden" value="@Model.Product.Id" name="productId" />
+
+					<button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+				</form>
+			}
+			else
+			{
+				<form class="review-box p-4" action="~/Login">
+					<div class="form-group">
+						<label for="rating">Đánh giá chất lượng</label>
+						<div id="rating" class="rating">
+							<a href="#" class="star" onclick="addStar(1)" data-value="1"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(2)" data-value="2"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(3)" data-value="3"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(4)" data-value="4"><span class="ion-ios-star-outline"></span></a>
+							<a href="#" class="star" onclick="addStar(5)" data-value="5"><span class="ion-ios-star-outline"></span></a>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="comment">Bình luận</label>
+						<textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Điền đánh giá của bạn" required></textarea>
+					</div>
+					<input type="hidden" id="rate" name="rate" />
+					<input type="hidden" value="@Model.Product.Id" name="productId" />
+
+					<button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+				</form>
+			}
+
+			@if (Model.Comments.Count == 0)
+			{
+				<h4 class="mb-4">Hãy là người đánh giá đầu tiên cho sản phẩm này!</h4>
+			}
+			else
+			{
+				<h4 class="mb-4">Đánh giá của khách hàng</h4>
+				<div class="d-flex align-items-center">
+					<div class="rating mr-3">
+						<p class="text-left">
+							<a class="mr-2">@Math.Round(Model.Product.Rate, 1)</a> <!-- Hiển thị rate với 1 số thập phân -->
+							@for (int i = 0; i < fullStars; i++)
+							{
+								<a href=""><span class="ion-ios-star"></span></a> <!-- Hiển thị sao đầy đủ -->
+							}
+							@for (int i = 0; i < remainingStars; i++)
+							{
+								<a href=""><span class="ion-ios-star-outline"></span></a> <!-- Hiển thị sao outline -->
+							}
+						</p>
+					</div>
+					<div class="total-reviews">
+						<p><span id="review-count" style="color: #bbb;">@Model.Comments.Count Lượt đánh giá</span></p>
+					</div>
+				</div>
+				@foreach (var comment in Model.Comments)
+				{
+
+					<div class="comment-item" data-rating="@comment.Rate">
+						<div class="comment-box p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+							<div class="d-flex align-items-center mb-2">
+								<img src="https://avatarfiles.alphacoders.com/164/164816.jpg" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%;" class="mr-2">
+								<div>
+									<h6 class="mb-1">@comment.User.Username</h6>
+									<div class="rating">
+										@for (int i = 0; i < comment.Rate; i++)
+										{
+											<a href=""><span class="ion-ios-star"></span></a> <!-- Hiển thị sao đầy đủ -->
+										}
+										@for (int i = 0; i < 5 - comment.Rate; i++)
+										{
+											<a href=""><span class="ion-ios-star-outline"></span></a> <!-- Hiển thị sao outline -->
+										}
+									</div>
+								</div>
+							</div>
+							<p class="text-left"><small class="text-muted">Đăng vào @comment.CommentedAt</small></p>
+							<div class="comment-content">
+								<p>@comment.Content</p>
+							</div>
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</section>
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center mb-3 pb-3">
+				<div class="col-md-12 heading-section text-center">
+					<span class="subheading">Sản Phẩm</span>
+					<h2 class="mb-4">Những sản phầm khác</h2>
+					<p>Khám phá những sản phẩm tương tự</p>
+				</div>
+			</div>
+			<div class="row">
+				@foreach (var product in Model.SimilarProducts)
+				{
+					<div class="col-md-6 col-lg-3 ftco-animate">
+						<div class="product">
+							<a href="ProductDetails?id=@product.Id" class="img-prod">
+								<img class="img-fluid"
+									 src="@product.Image">
+								<span class="status">@Math.Round(product.Rate, 1) *</span>
+								<div class="overlay"></div>
+							</a>
+							<div class="text py-3 pb-4 px-3 text-center">
+								<h3><a href="ProductDetails?id=@product.Id">@product.Name</a></h3>
+								<div class="d-flex">
+									<div class="pricing">
+										<p class="price"><span class="price-sale">@product.Price VNĐ</span></p>
+									</div>
+								</div>
+								<div class="bottom-area d-flex px-3">
+									<div class="m-auto d-flex">
+										<a href="ProductDetails?id=@product.Id" class="add-to-cart d-flex justify-content-center align-items-center text-center">
+											<span><i class="ion-ios-menu"></i></span>
+										</a>
+										@if (ViewContext.HttpContext.Request.Cookies["AuthToken"] != null)
+										{
+											<a href="AddToCart?changeAction=1&productId=@product.Id" class="buy-now d-flex justify-content-center align-items-center mx-1">
+												<span><i class="ion-ios-cart"></i></span>
+											</a>
+										}
+										else
+										{
+											<a href="~/Login" class="buy-now d-flex justify-content-center align-items-center mx-1">
+												<span><i class="ion-ios-cart"></i></span>
+											</a>
+										}
+										<a href="#" class="heart d-flex justify-content-center align-items-center">
+											<span><i class="ion-ios-heart"></i></span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</section>
+
+	<script>
+		function addStar(id) {
+			document.getElementById("rate").value = id;
+		}
+		document.querySelector('.quantity-left-minus').addEventListener('click', function () {
+			var quantity = parseInt(document.getElementById('quantity').value);
+			if (quantity > 1) {
+				document.getElementById('quantity').value = quantity + 1;
+			}
+		});
+
+		document.querySelector('.quantity-right-plus').addEventListener('click', function () {
+			var quantity = parseInt(document.getElementById('quantity').value);
+			if (quantity < 100) {
+				document.getElementById('quantity').value = quantity - 1;
+			}
+		});
+
+
+		document.addEventListener('DOMContentLoaded', () => {
+			// Handle Edit button click
+			document.querySelectorAll('.edit-button').forEach(button => {
+				button.addEventListener('click', function () {
+					const commentBox = this.closest('.comment-box');
+					commentBox.querySelector('.comment-content').classList.add('d-none');
+					commentBox.querySelector('.comment-edit-form').classList.remove('d-none');
+
+					// Enable star rating clicks by adding the editable class
+					commentBox.querySelectorAll('.star-rating').forEach(star => {
+						star.classList.add('editable');
+						star.addEventListener('click', handleStarClick);
+					});
+
+					this.classList.add('d-none');
+					commentBox.querySelector('.delete-button').classList.add('d-none');
+					commentBox.querySelector('.save-button').classList.remove('d-none');
+					commentBox.querySelector('.cancel-button').classList.remove('d-none');
+				});
+			});
+
+			// Handle star rating click
+			function handleStarClick(e) {
+				e.preventDefault();
+				if (!this.classList.contains('editable')) return;
+
+				const commentBox = this.closest('.comment-box');
+				const stars = commentBox.querySelectorAll('.star-rating');
+				const rating = this.getAttribute('data-value');
+				// Update star display
+				stars.forEach((star, index) => {
+					if (index < rating) {
+						star.innerHTML = '<span class="ion-ios-star"></span>';
+					} else {
+						star.innerHTML = '<span class="ion-ios-star-outline"></span>';
+					}
+				});
+
+				// Store the new rating in the comment box
+				commentBox.setAttribute('data-new-rating', rating);
+			}
+
+			document.addEventListener('DOMContentLoaded', () => {
+				// Handle Filter button click
+				document.querySelectorAll('.btn-group .btn').forEach(button => {
+					button.addEventListener('click', function () {
+						// Remove active class from all buttons
+						document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+						// Add active class to the clicked button
+						this.classList.add('active');
+
+						// Get the rating value from the clicked button
+						const rating = this.getAttribute('data-rating');
+						const commentItems = document.querySelectorAll('#comment-list .comment-item');
+
+						commentItems.forEach(item => {
+							const itemRating = item.getAttribute('data-rating');
+
+							if (rating === 'all' || rating === itemRating) {
+								item.style.display = ''; // Show item
+							} else {
+								item.style.display = 'none'; // Hide item
+							}
+						});
+					});
+				});
+			});
+		});
+
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const stars = document.querySelectorAll(".star");
+			const rateInput = document.getElementById("Rate");
+
+			stars.forEach(star => {
+				star.addEventListener("click", function (e) {
+					e.preventDefault();
+					const value = this.getAttribute("data-value");
+					rateInput.value = value;
+
+					// Reset all stars
+					stars.forEach(s => s.querySelector("span").className = "ion-ios-star-outline");
+
+					// Highlight stars up to the selected one
+					for (let i = 0; i < value; i++) {
+						stars[i].querySelector("span").className = "ion-ios-star";
+					}
+				});
+			});
+		});
+
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const ratingStarsElement = document.getElementById('rating-stars');
+			const ratingValueElement = document.getElementById('rating-value');
+			const reviewCountElement = document.getElementById('review-count');
+
+			// Function to update rating and review count
+			function updateRatingSummary(rating, count) {
+				// Update the rating stars
+				ratingStarsElement.innerHTML = '';
+				for (let i = 1; i <= 5; i++) {
+					const starClass = i <= rating ? 'ion-ios-star' : 'ion-ios-star-outline';
+					ratingStarsElement.innerHTML += `<a href="#"><span class="${starClass}"></span></a>`;
+				}
+				// Update the rating value and review count
+				ratingValueElement.textContent = `${rating}.0`;
+				reviewCountElement.textContent = `${count} reviews`;
+			}
+
+			// Handle Filter button click
+			document.querySelectorAll('.btn-group .btn').forEach(button => {
+				button.addEventListener('click', function () {
+					// Remove active class from all buttons
+					document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+					// Add active class to the clicked button
+					this.classList.add('active');
+
+					// Get the rating value from the clicked button
+					const rating = this.getAttribute('data-rating');
+					const commentItems = document.querySelectorAll('#comment-list .comment-item');
+
+					let count = 0;
+					let ratingSum = 0;
+
+					commentItems.forEach(item => {
+						const itemRating = item.getAttribute('data-rating');
+
+						if (rating === 'all' || rating === itemRating) {
+							item.style.display = ''; // Show item
+							count++;
+							if (rating === 'all') {
+								ratingSum += parseInt(itemRating, 10);
+							}
+						} else {
+							item.style.display = 'none'; // Hide item
+						}
+					});
+
+					if (rating === 'all') {
+						// Average rating
+						const averageRating = count > 0 ? (ratingSum / count).toFixed(1) : 0;
+						updateRatingSummary(averageRating, count);
+					} else {
+						// Specific rating
+						updateRatingSummary(rating, count);
+					}
+				});
+			});
+		});
+
+	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const commentsPerPage = 5;
+			const commentList = document.querySelectorAll('#comment-list .comment-item');
+			const pagination = document.getElementById('pagination');
+			const filterButtons = document.querySelectorAll('[data-rating]');
+
+			let filteredComments = Array.from(commentList);
+
+			function showPage(page) {
+				const start = (page - 1) * commentsPerPage;
+				const end = page * commentsPerPage;
+
+				filteredComments.forEach((item, index) => {
+					item.style.display = (index >= start && index < end) ? 'block' : 'none';
+				});
+
+				updatePagination(page);
+			}
+
+			function updatePagination(currentPage) {
+				pagination.innerHTML = '';
+				const totalPages = Math.ceil(filteredComments.length / commentsPerPage);
+
+				const createButton = (page, text, isActive = false) => {
+					const li = document.createElement('li');
+					li.className = isActive ? 'active' : '';
+					const a = document.createElement('a');
+					a.href = '#';
+					a.innerHTML = text; // Use innerHTML to handle HTML entities properly
+					a.onclick = () => { showPage(page); return false; };
+					li.appendChild(a);
+					return li;
+				};
+
+				// Add previous button
+				if (currentPage > 1) {
+					pagination.appendChild(createButton(currentPage - 1, '&#9664;')); // Unicode for left arrow
+				} else {
+					pagination.appendChild(createButton(currentPage, '&#9664;', true)); // Unicode for left arrow
+				}
+
+				// Add page numbers
+				for (let i = 1; i <= totalPages; i++) {
+					pagination.appendChild(createButton(i, i, i === currentPage));
+				}
+
+				// Add next button
+				if (currentPage < totalPages) {
+					pagination.appendChild(createButton(currentPage + 1, '&#9654;')); // Unicode for right arrow
+				} else {
+					pagination.appendChild(createButton(currentPage, '&#9654;', true)); // Unicode for right arrow
+				}
+			}
+
+			function applyFilter(rating) {
+				filteredComments = Array.from(commentList).filter(comment => {
+					if (rating === 'all') return true;
+					return comment.dataset.rating === rating;
+				});
+				showPage(1);
+			}
+
+			// Initialize pagination
+			showPage(1);
+
+			// Add event listeners for filter buttons
+			filterButtons.forEach(button => {
+				button.addEventListener('click', function () {
+					filterButtons.forEach(btn => btn.classList.remove('active'));
+					this.classList.add('active');
+					const rating = this.dataset.rating;
+					applyFilter(rating);
+				});
+			});
+		});
+	</script>
+	<script>
+		// Đặt giá trị mặc định cho quantity
+		var defaultQuantity = 1;
+		document.getElementById("quantity").value = defaultQuantity;
+
+		// Lắng nghe sự kiện nhập trực tiếp vào input
+		document.getElementById("quantity").addEventListener("input", function () {
+			updateCartLink();
+		});
+
+		// Hàm cập nhật href của liên kết "Thêm vào giỏ hàng"
+		function updateCartLink() {
+			var quantity = document.getElementById("quantity").value;
+			var addToCartLink = document.getElementById("addToCartLink");
+			var productId = "@Model.Product.Id";
+
+			// Sử dụng quantity nhập vào hoặc giá trị mặc định nếu không thay đổi
+			var finalQuantity = (quantity && quantity !== "") ? quantity : defaultQuantity;
+			addToCartLink.href = `AddByQuantity?changeAction=${finalQuantity}&productId=${productId}`;
+		}
+
+		// Đảm bảo cập nhật link khi trang tải
+		window.addEventListener("load", function () {
+			updateCartLink(); // Cập nhật liên kết khi trang tải
+		});
+	</script>
+
+
+</body>
