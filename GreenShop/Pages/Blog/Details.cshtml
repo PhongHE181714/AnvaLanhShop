@@ -1,0 +1,97 @@
+﻿@page
+@model Project_PRN221.Pages.Blog.DetailsModel
+
+@{
+	ViewBag.Title = "Shop Page";
+	Layout = "~/Pages/Shared/ShopLayout.cshtml";
+	
+}
+<body class="goto-here">
+	<div class="hero-wrap hero-bread" style="background-image: url('/img/bg_1.jpg');">
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-center justify-content-center">
+				<div class="col-md-9 ftco-animate text-center">
+					<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Blog</span></p>
+					<h1 class="mb-0 bread">Blog</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="ftco-section ftco-degree-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 ftco-animate">
+					<h2 class="mb-3">@Model.News.Title</h2>
+
+					@foreach (var item in Model.BlogsDetails)
+					{
+						@if (item.Type == 0)
+						{
+							<p>@item.Content</p>
+						}
+						else if (item.Type == 1)
+						{
+							<p><img src="@item.Content" alt="" class="img-fluid" /></p>
+						}
+					}
+					
+
+					<div class="pt-5 mt-5">
+
+						<!-- END comment-list -->
+
+					</div>
+				</div> <!-- .col-md-8 -->
+				<div class="col-lg-4 sidebar ftco-animate">
+					<div class="sidebar-box">
+						<form action="#" class="search-form">
+							<div class="form-group">
+								<span class="icon ion-ios-search"></span>
+								<input type="text" class="form-control" placeholder="Tìm kiếm...">
+							</div>
+						</form>
+					</div>
+					<div class="sidebar-box ftco-animate">
+						<h3 class="heading">Thể loại</h3>
+						<ul class="categories">
+							<li><a href="#">Tin hot<span>(12)</span></a></li>
+							<li><a href="#">Môi trường <span>(22)</span></a></li>
+							<li><a href="#">Khuyến mãi <span>(37)</span></a></li>
+							<li><a href="#">Sản phẩm mới <span>(42)</span></a></li>
+						</ul>
+					</div>
+
+					<div class="sidebar-box ftco-animate">
+						<h3 class="heading">Recent Blog</h3>
+
+
+						@foreach (var item in Model.RecentNews)
+						{
+							<div class="block-21 mb-4 d-flex">
+								<a class="blog-img mr-4" style="background-image: url('@item.Img');"></a>
+								<div class="text">
+									<h3 class="heading-1"><a href="Details?id=@item.Id">@item.Title</a></h3>
+									<div class="meta">
+										<div><a href="Details?id=@item.Id"><span class="icon-calendar"></span>  @item.CreatedAt</a></div>
+										<div><a href="Details?id=@item.Id"><span class="icon-person"></span> Admin</a></div>
+										
+									</div>
+								</div>
+							</div>
+						}
+
+
+					</div>
+
+				
+
+
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+</body>
