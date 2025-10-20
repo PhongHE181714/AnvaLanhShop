@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Accounts
+namespace GreenShop.Pages.Accounts
 {
     public class CreateModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public CreateModel(Project_PRN221.Models.GreenShopContext context)
+        public CreateModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }
@@ -24,7 +24,7 @@ namespace Project_PRN221.Pages.Accounts
        
         public List<Role> Roles { get; set; }
         [BindProperty]
-        public Project_PRN221.Models.User User { get; set; } = default!;
+        public GreenShop.Models.User User { get; set; } = default!;
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD

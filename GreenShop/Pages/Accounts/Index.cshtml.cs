@@ -7,15 +7,15 @@ using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Accounts
+namespace GreenShop.Pages.Accounts
 {
     public class IndexModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public IndexModel(Project_PRN221.Models.GreenShopContext context)
+        public IndexModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }
@@ -24,7 +24,7 @@ namespace Project_PRN221.Pages.Accounts
         public int pageLength { get; set; }
         public int pageSize { get; set; }
         public int? page { get; set; }
-        public IList<Project_PRN221.Models.User> users { get;set; } = default!;
+        public IList<GreenShop.Models.User> users { get;set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? Pag,string? searchString)
         {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Project_PRN221.Pages.Blog
+namespace GreenShop.Pages.Blog
 {
     public class DetailsModel : PageModel
     {
