@@ -1,0 +1,153 @@
+﻿@page
+@model Project_PRN221.Pages.Accounts.IndexModel
+@{
+    ViewBag.Title = "Tab Title name";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+@{
+    ViewData["Title"] = "User Management";
+    var searchString = Model.searchString as string;
+   
+}
+<body>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                            <h4>User Management</h4>
+                            <a href="Accounts/Create" class="btn btn-primary">Create</a>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <form method="get" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-3" style="margin-left:25px;">
+                                        <input type="text" name="searchString" value="@searchString" placeholder="Search by Username or Email" class="form-control" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                @Html.DisplayNameFor(model => model.users[0].Username) And  @Html.DisplayNameFor(model => model.users[0].Email)
+                                            </th>
+
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                @Html.DisplayNameFor(model => model.users[0].Role.Name)
+                                            </th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                @Html.DisplayNameFor(model => model.users[0].Status)
+                                            </th>
+
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                @Html.DisplayNameFor(model => model.users[0].CreateAt)
+                                            </th>
+                                            <th class="text-secondary opacity-7"></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.users)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-2 py-1">
+
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">   @Html.DisplayFor(modelItem => item.Username)</h6>
+                                                            <p class="text-xs text-secondary mb-0">   @Html.DisplayFor(modelItem => item.Email)</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0"> @Html.DisplayFor(modelItem => item.Role.Name)</p>
+                                                    <p class="text-xs text-secondary mb-0"></p>
+                                                </td>
+                                                <td class="align-middle text-center text-sm">
+                                                    @if (item.Status == 1)
+                                                    {
+                                                        <span class="badge badge-sm bg-gradient-success">@Html.DisplayFor(modelItem => item.Status)</span>
+                                                    }
+                                                    else if (item.Status == 0)
+                                                    {
+                                                        <span class="badge badge-sm bg-gradient-secondary">@Html.DisplayFor(modelItem => item.Status)</span>
+                                                    }
+                                                </td>
+
+                                                <td class="align-middle text-center">
+                                                    <span class="text-secondary text-xs font-weight-bold"> @Html.DisplayFor(modelItem => item.CreateAt)</span>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="Accounts/Edit?id=@item.Id" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                                                    <a href="Accounts/Delete?id=@item.Id" onclick="confirmCreate()" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+
+                                                  
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                           <div class="clearfix" style="display:flex;align-items:flex-end;">
+                                @{
+                                    var max = Model.pageLength;
+                                    var page = Model.page;
+                                    var next = page + 1;
+                                    var pre = page - 1;
+
+                                }
+
+                                <ul class="pagination">
+                                    @if (page > 1)
+                                    {
+                                        <li class="page-item"><a href="?Pag=@pre" class="page-link">Previous</a></li>
+
+                                    }
+
+                                    @for (int i = 1; i <= max; i++)
+                                    {
+                                        @if (page == i)
+                                        {
+                                            <li class="page-item active"><a href="?Pag=@i" class="page-link">@i</a></li>
+                                        }
+                                        else
+
+                                        {
+                                            <li class="page-item"><a href="?Pag=@i" class="page-link">@i</a></li>
+                                        }
+
+                                    }
+                                    @if (page < max)
+                                    {
+                                        <li class="page-item "><a href="?Pag=@next" class="page-link">Next</a></li>
+
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<script type="text/javascript">
+    function confirmCreate() {
+        return confirm('Are you sure you want to delete this item?');
+    }
+    
+</script>
