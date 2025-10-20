@@ -1,0 +1,514 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>EcoNest - Group 2 Bông Tắm</title>
+	<link rel="icon" type="image/png" href="~/img/econest_finalllllll_png.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
+
+	<link rel="stylesheet" href="~/css/animate.css">
+
+	<link rel="stylesheet" href="~/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+	<link rel="stylesheet" href="~/css/magnific-popup.css">
+
+	<link rel="stylesheet" href="~/css/aos.css">
+
+	<link rel="stylesheet" href="~/css/ionicons.min.css">
+
+	<link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+	<link rel="stylesheet" href="~/css/jquery.timepicker.css">
+
+	<link rel="stylesheet" href="~/css/flaticon.css">
+	<link rel="stylesheet" href="~/css/icomoon.css">
+	<link rel="stylesheet" href="~/css/style.css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css" rel="stylesheet">
+	<style>
+		/* CSS cho avatar trong navbar */
+		.navbar-nav img.rounded-circle {
+			width: 30px; /* Chiều rộng avatar */
+			height: 30px; /* Chiều cao avatar */
+			border-radius: 50%; /* Để avatar có hình tròn */
+			margin-right: 8px; /* Khoảng cách bên phải */
+			margin-top: 4px; /* Khoảng cách trên để căn chỉnh */
+			vertical-align: middle; /* Căn giữa theo chiều dọc */
+		}
+
+		/* Để avatar không bị lệch khi cuộn */
+		.navbar-nav {
+			display: flex; /* Sử dụng flexbox để căn chỉnh */
+			align-items: center; /* Căn giữa theo chiều dọc */
+		}
+
+		.navbar-nav .nav-item .nav-link:hover {
+			color: #fff;
+			background-color: #8dc63f;
+			transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+		}
+
+		.navbar-nav .nav-item .cta .nav-link:hover {
+			color: #fff;
+			background-color: #8dc63f;
+		}
+
+		.dropdown-item:hover {
+			color: #fff;
+			background-color: #8dc63f;
+		}
+
+		<!-- -->
+		.dropdown-item {
+			background-color: transparent; /* Màu nền mặc định */
+			color: #000; /* Màu chữ mặc định */
+			transition: background-color 0.3s; /* Hiệu ứng chuyển tiếp */
+		}
+
+			.dropdown-item:active {
+				background-color: #8dc63f; /* Màu nền khi nhấn giữ */
+				color: #fff; /* Thay đổi màu chữ nếu cần */
+			}
+		<!-- HomeBanner-- >
+		.dots-container {
+			margin-top: 20px;
+		}
+
+		.dot {
+			height: 12px;
+			width: 12px;
+			margin: 0 5px;
+			background-color: #ddd;
+			border-radius: 50%;
+			display: inline-block;
+		}
+
+			.dot.active {
+				background-color: #8dc63f; /* Green color for active dot */
+			}
+		<!-- Contact-- >
+		.ftco-section.contact-section {
+			border-top: 5px solid #ddd; /* Viền trên của phần contact */
+			padding: 40px 0;
+		}
+
+		.info {
+			border: 1px solid #ccc; /* Viền cho từng khối info */
+			border-radius: 10px; /* Tạo bo góc cho các khối */
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm đổ bóng */
+		}
+
+			.info p {
+				font-size: 16px;
+				line-height: 1.6;
+			}
+
+				.info p span {
+					font-weight: bold;
+					color: #333;
+				}
+
+
+		<!-- cart-- >
+		.input-group-prepend .btn,
+		.input-group-append .btn {
+			border-radius: 50%; /* Làm tròn các nút */
+			width: 40px; /* Đặt kích thước cố định cho nút */
+			height: 40px; /* Đặt kích thước cố định cho nút */
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px; /* Kích thước biểu tượng */
+			padding: 0;
+			margin: 0;
+			border: 1px solid #ddd;
+			background-color: #fff;
+		}
+
+		.quantity input.form-control {
+			text-align: center;
+			font-size: 18px;
+			font-weight: bold;
+			border: none;
+			width: 50px;
+			height: 40px;
+		}
+
+		.input-group {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.input-group-prepend,
+		.input-group-append {
+			margin: 0 5px; /* Khoảng cách giữa các nút và ô nhập */
+		}
+
+		.btn:hover {
+			background-color: #f0f0f0; /* Hiệu ứng khi hover */
+		}
+
+		<!-- end cart-- >
+		.review-box {
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			width: 100%;
+		}
+
+		#home-section .home-slider {
+			width: 100vw;
+			position: relative;
+			left: 50%;
+			right: 50%;
+			margin-left: -50vw;
+			margin-right: -50vw;
+			overflow: hidden;
+		}
+
+		.ftco-section.img {
+			width: 100vw;
+			position: relative;
+			left: 50%;
+			right: 50%;
+			margin-left: -50vw;
+			margin-right: -50vw;
+			overflow: hidden;
+		}
+
+		.hero-wrap.hero-bread {
+			width: 100vw;
+			position: relative;
+			left: 50%;
+			right: 50%;
+			margin-left: -50vw;
+			margin-right: -50vw;
+			overflow: hidden;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		.list-group-item-action {
+			cursor: pointer;
+		}
+
+			.list-group-item-action:hover {
+				background-color: #f1f1f1;
+			}
+
+		h5, h6 {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body class="goto-here">
+	<div class="py-1 bg-primary">
+		<div class="container">
+			<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+				<div class="col-lg-12 d-block">
+					<div class="row d-flex">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+		<div class="container">
+			<div class="d-flex align-items-center">
+				<img src="~/img/econest_finalllllll_png.png" alt="EcoNest Logo" style="height: 40px; width: auto;" class="mr-2">
+				<a class="navbar-brand" href="~/Shop">EcoNest</a>
+			</div>
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="oi oi-menu"></span> Menu
+			</button>
+
+			<div class="collapse navbar-collapse" id="ftco-nav">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item @(Context.Request.Path == "/Shop" ? "active" : "")">
+						<a href="~/Shop" class="nav-link">Trang Chủ</a>
+					</li>
+					<li class="nav-item @(Context.Request.Path == "/Shop/Product" || Context.Request.Path == "/Shop/ProductDetails" ? "active" : "")">
+						<a href="~/Shop/Product" class="nav-link">Sản Phẩm</a>
+					</li>
+					<li class="nav-item @(Context.Request.Path == "/Shop/About" ? "active" : "")">
+						<a href="~/Shop/About" class="nav-link">Về Chúng Tôi</a>
+					</li>
+					<li class="nav-item @(Context.Request.Path == "/Blog" || Context.Request.Path == "/Blog/Details" ? "active" : "")">
+						<a href="~/Blog" class="nav-link">Blog</a>
+					</li>
+					<li class="nav-item @(Context.Request.Path == "/Shop/Contact" ? "active" : "")">
+						<a href="~/Shop/Contact" class="nav-link">Liên Hệ</a>
+					</li>
+					@if (Context.Request.Cookies["AuthToken"] != null)
+					{
+						<li class="nav-item @(Context.Request.Path == "/Shop/OrderList" ? "active" : "")">
+							<a href="~/Shop/OrderList" class="nav-link">Đơn Hàng</a>
+						</li>
+						<li class="nav-item cta cta-colored @(Context.Request.Path == "/Cart/CartView" ? "active" : "")">
+							<a href="~/Cart/CartView" class="nav-link">
+								<span class="icon-shopping_cart"></span>[@Model.itemCart]
+							</a>
+						</li>
+					}
+					else
+					{
+						<li class="nav-item cta cta-colored @(Context.Request.Path == "/Login" ? "active" : "")">
+							<a href="~/Login" class="nav-link">
+								<span class="icon-shopping_cart"></span>
+							</a>
+						</li>
+					}
+				</ul>
+
+				@if (Context.Request.Cookies["AuthToken"] == null)
+				{
+					<ul class="navbar-nav" style="margin-left: 50px;">
+						<a class="dropdown-item @(Context.Request.Path == "/Login" ? "active" : "")" href="~/Login">Đăng Nhập</a>
+					</ul>
+				}
+				else
+				{
+					<ul class="navbar-nav" style="margin-left: 50px;">
+						<img src="~/img/team-1.jpg" alt="Avatar" class="rounded-circle"
+							 style="cursor: pointer;" onclick="window.location.href='https://localhost:7147/User'">
+
+						<li class="nav-item @(Context.Request.Path == "/Login/Logout" ? "active" : "")">
+							<a href="~/Login/Logout" class="nav-link">Đăng Xuất</a>
+						</li>
+					</ul>
+				}
+			</div>
+		</div>
+	</nav>
+
+	<!-- END nav -->
+
+	<div class="container">
+		<main role="main">
+			@RenderBody()
+		</main>
+	</div>
+
+	<section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
+		<div class="container py-4">
+			<div class="row d-flex justify-content-center py-5">
+			</div>
+		</div>
+	</section>
+	<footer class="ftco-footer ftco-section">
+		<div class="container">
+			<div class="row">
+				<div class="mouse">
+					<a href="#" class="mouse-icon">
+						<div class="mouse-wheel"><span class="ion-ios-arrow-up"></span></div>
+					</a>
+				</div>
+			</div>
+			<div class="row mb-5">
+				<div class="col-md">
+					<div class="ftco-footer-widget mb-4">
+						<h2 class="ftco-heading-2">EcoNest</h2>
+						<p>Bông tắm Xơ Mướp 100% từ thiên nhiên - Sự lựa chọn hoàn hảo cho làn da và môi trường</p>
+					</div>
+				</div>
+				<div class="col-md">
+					<div class="ftco-footer-widget mb-4 ml-md-5">
+						<h2 class="ftco-heading-2">Menu</h2>
+						<ul class="list-unstyled">
+							<li><a href="~/Shop/Product" class="py-2 d-block">Sản Phẩm</a></li>
+							<li><a href="~/Shop/About" class="py-2 d-block">Về Chúng Tôi</a></li>
+							<li><a href="~/Blog" class="py-2 d-block">Blog</a></li>
+							<li><a href="~/Shop/Contact" class="py-2 d-block">Liên Hệ</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="ftco-footer-widget mb-4">
+						<h2 class="ftco-heading-2">Help</h2>
+						<div class="d-flex">
+							<ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
+								<li><a href="#" class="py-2 d-block">Shipping Information</a></li>
+								<li><a href="#" class="py-2 d-block">Returns &amp; Exchange</a></li>
+								<li><a href="#" class="py-2 d-block">Terms &amp; Conditions</a></li>
+								<li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
+							</ul>
+							<ul class="list-unstyled">
+								<li><a href="#" class="py-2 d-block">FAQs</a></li>
+								<li><a href="#" class="py-2 d-block">Contact</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md">
+					<div class="ftco-footer-widget mb-4">
+						<h2 class="ftco-heading-2">Liên Hệ Với Chúng Tôi</h2>
+						<div class="block-23 mb-3">
+							<ul>
+								<li><a href="#"><span class="icon icon-phone"></span><span class="text">(+84) 978 468 063</span></a></li>
+								<li><a href="#"><span class="icon icon-envelope"></span><span class="text">econest@gmail.com</span></a></li>
+								<li><a href="https://www.facebook.com/profile.php?id=100017097183407"><span class="icon icon-facebook"></span><span class="text">EcoNest</span></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+
+	<!-- loader -->
+	<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+
+
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+	<script src="~/js/popper.min.js"></script>
+	<script src="~/js/bootstrap.min.js"></script>
+	<script src="~/js/jquery.easing.1.3.js"></script>
+	<script src="~/js/jquery.waypoints.min.js"></script>
+	<script src="~/js/jquery.stellar.min.js"></script>
+	<script src="~/js/owl.carousel.min.js"></script>
+	<script src="~/js/jquery.magnific-popup.min.js"></script>
+	<script src="~/js/aos.js"></script>
+	<script src="~/js/jquery.animateNumber.min.js"></script>
+	<script src="~/js/bootstrap-datepicker.js"></script>
+	<script src="~/js/scrollax.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+	<script src="~/js/google-map.js"></script>
+	<script src="~/js/main.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+
+
+	<script>
+		$(document).ready(function () {
+
+			var quantitiy = 0;
+			$('.quantity-right-plus').click(function (e) {
+
+				// Stop acting like a button
+				e.preventDefault();
+				// Get the field name
+				var quantity = parseInt($('#quantity').val());
+
+				// If is not undefined
+
+				$('#quantity').val(quantity + 1);
+
+
+				// Increment
+
+			});
+
+			$('.quantity-left-minus').click(function (e) {
+				// Stop acting like a button
+				e.preventDefault();
+				// Get the field name
+				var quantity = parseInt($('#quantity').val());
+
+				// If is not undefined
+
+				// Increment
+				if (quantity > 0) {
+					$('#quantity').val(quantity - 1);
+				}
+			});
+
+		});
+	</script>
+	<script>
+		// Lấy tất cả các phần tử sao
+		const stars = document.querySelectorAll('.rating .star');
+
+		stars.forEach(star => {
+			star.addEventListener('mouseover', function () {
+				const value = this.getAttribute('data-value');
+				updateStars(value);
+			});
+
+			star.addEventListener('mouseout', function () {
+				const selectedValue = document.querySelector('.rating .star.selected')?.getAttribute('data-value') || 0;
+				updateStars(selectedValue);
+			});
+
+			star.addEventListener('click', function () {
+				const value = this.getAttribute('data-value');
+				setRating(value);
+			});
+		});
+
+		function updateStars(value) {
+			stars.forEach(star => {
+				if (star.getAttribute('data-value') <= value) {
+					star.querySelector('span').classList.add('ion-ios-star');
+					star.querySelector('span').classList.remove('ion-ios-star-outline');
+				} else {
+					star.querySelector('span').classList.add('ion-ios-star-outline');
+					star.querySelector('span').classList.remove('ion-ios-star');
+				}
+			});
+		}
+
+		function setRating(value) {
+			stars.forEach(star => {
+				star.classList.remove('selected');
+			});
+			document.querySelector(`.rating .star[data-value="${value}"]`).classList.add('selected');
+			updateStars(value);
+		}
+	</script>
+
+	@* user profile *@
+	<script data-cfasync="false" src="~/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript">
+
+	</script>
+
+	@* cart *@
+	<script>
+		$(document).ready(function () {
+
+			var quantitiy = 0;
+			$('.quantity-right-plus').click(function (e) {
+
+				// Stop acting like a button
+				e.preventDefault();
+				// Get the field name
+				var quantity = parseInt($('#quantity').val());
+
+				// If is not undefined
+
+				$('#quantity').val(quantity + 1);
+
+
+				// Increment
+
+			});
+
+			$('.quantity-left-minus').click(function (e) {
+				// Stop acting like a button
+				e.preventDefault();
+				// Get the field name
+				var quantity = parseInt($('#quantity').val());
+
+				// If is not undefined
+
+				// Increment
+				if (quantity > 0) {
+					$('#quantity').val(quantity - 1);
+				}
+			});
+
+		});
+	</script>
+</body>
+</html>
