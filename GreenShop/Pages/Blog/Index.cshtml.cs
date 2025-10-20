@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
-using Project_PRN221.Pages.Shop;
+using GreenShop.Models;
+using GreenShop.Pages.Shop;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Project_PRN221.Pages.Blog
@@ -11,12 +11,12 @@ namespace Project_PRN221.Pages.Blog
     {
         private readonly GreenShopContext _context;
 
-        public List<Project_PRN221.Models.BlogModel> Blogs { get; set; }
+        public List<GreenShop.Models.BlogModel> Blogs { get; set; }
         public IEnumerable<News> RecentNews { get; set; }
         public IndexModel(GreenShopContext context)
 		{
 			_context = context;
-            Blogs = new List<Project_PRN221.Models.BlogModel>();
+            Blogs = new List<GreenShop.Models.BlogModel>();
         }
        
   
@@ -31,7 +31,7 @@ namespace Project_PRN221.Pages.Blog
                 {
                     content = content.Length>50? content.Substring(0,49)+"...": content ;
                 }
-                Project_PRN221.Models.BlogModel blog = new Project_PRN221.Models.BlogModel();
+                GreenShop.Models.BlogModel blog = new GreenShop.Models.BlogModel();
                 blog.Id = news.Id;
                 blog.Title = news.Title;
                 blog.Description = content; 
@@ -51,7 +51,7 @@ namespace Project_PRN221.Pages.Blog
             Guid? userId = getIdFromToken();
             if (userId != null)
             {
-                List<Models.Cart> cart = new List<Models.Cart>();
+                List<GreenShop.Models.Cart> cart = new List<GreenShop.Models.Cart>();
                 cart = _context.Carts.Where(c => c.UserId == userId).ToList();
                 return cart.Count;
             }
