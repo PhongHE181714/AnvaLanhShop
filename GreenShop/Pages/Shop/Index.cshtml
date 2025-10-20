@@ -1,0 +1,340 @@
+﻿@page
+@model GreenShop.Pages.Shop.HomeModel
+@{
+	ViewData["Title"] = "Home";
+	Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<head>
+	<style>
+		.category-wrap{
+			border: 1px solid #e6e6e6; /* Add border */
+			border-radius: 8px; /* Rounded corners */
+		}
+		.ftco-section .blog-entry {
+			margin-bottom: 30px; /* Tạo khoảng cách đều giữa các blog entries */
+		}
+
+		.blog-entry .block-20 {
+			width: 100%;
+			height: 200px;
+			background-size: cover;
+			background-position: center;
+		}
+
+		.blog-entry .text {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.text h3 {
+			margin-bottom: 15px;
+		}
+
+		.text p {
+			margin-bottom: 0;
+		}
+
+		.meta {
+			margin-bottom: 10px;
+		}
+
+		.btn-primary {
+			margin-top: 10px;
+		}
+
+		.slider-title {
+		
+		
+			font-weight: bold !important;
+			color: #fff !important;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+			letter-spacing: 1px !important;
+			text-transform: uppercase !important;
+			animation: fadeInUp 1s ease-in-out !important;
+		}
+
+
+	</style>
+</head>
+<body class="goto-here">
+	<section id="home-section" class="hero">
+		<div class="home-slider owl-carousel">
+			<div class="slider-item" style="background-image: url('/img/ban-sao-ban-sao-ban-sao-ban-sao-img_7868-8993.jpeg');">
+				<div class="overlay"></div>
+				<div class="container">
+					<div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+						<div class="col-md-12 ftco-animate text-center">
+							<h1 class="slider-title mb-2">Sản phẩm xơ mướp an toàn &amp; tự nhiên</h1>
+							<h2 class="subheading mb-4">Sạch &amp; Sành &amp; Xanh</h2>
+							<p><a href="~/Shop/Product" class="btn btn-primary">Chi tiết</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slider-item" style="background-image: url('/img/img_6198-2743.jpeg');">
+				<div class="overlay"></div>
+				<div class="container">
+					<div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+						<div class="col-md-12 ftco-animate text-center">
+							<h1 class="slider-title mb-2">Sản phẩm xơ mướp an toàn &amp; tự nhiên</h1>
+							<h2 class="subheading mb-4">Sạch &amp; Sành &amp; Xanh</h2>
+							<p><a href="~/Shop/Product" class="btn btn-primary">Chi tiết</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slider-item" style="background-image: url('/img/img_7612-1633.jpeg');">
+				<div class="overlay"></div>
+				<div class="container">
+					<div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+						<div class="col-sm-12 ftco-animate text-center">
+							<h1 class="slider-title mb-2">100% Tự Nhiên &amp; bảo vệ môi trường</h1>
+							<h2 class="subheading mb-4">Sạch &amp; Sành &amp; Xanh</h2>
+							<p><a href="~/Shop/Product" class="btn btn-primary">Chi tiết</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</br>
+	</section>
+
+	<section class="ftco-section ftco-category ftco-no-pt">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-6 order-md-last align-items-stretch d-flex">
+							<div class="category-wrap-2 ftco-animate img align-self-stretch d-flex"
+								 style="background-image: url('https://i.imgur.com/61bv0U1.jpeg');border-radius: 15px;overflow: hidden;">
+								<div class="text text-center category-wrap-2">
+									<h2 style="color:white">Sản Phẩm</h2>
+									<p style="color:white">Bảo vệ làn da mềm mại của bạn</p>
+									<p><a href="~/Shop/Product" class="btn btn-primary">Mua Ngay</a></p>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="category-wrap ftco-animate img mb-4 d-flex align-items-end" style="background-image: url('https://i.imgur.com/SYz51Og.jpeg');">
+								<div class="text px-3 py-1">
+									<h2 class="mb-0"><a href="~/Shop/ProductDetails?id=922c78cd-529c-4ecd-961a-3411af81cad2">Bông tắm xơ mướp EcoNest</a></h2>
+								</div>
+							</div>
+							<div class="category-wrap ftco-animate img d-flex align-items-end" style="background-image: url('https://i.imgur.com/bTXeqKV.jpeg');">
+								<div class="text px-3 py-1">
+									<h2 class="mb-0"><a href="~/Shop/ProductDetails?id=fade0338-bb3f-469d-8b5e-968cb71bc9a8">Miếng rửa chén tròn</a></h2>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="category-wrap ftco-animate img mb-4 d-flex align-items-end" style="background-image: url('https://i.imgur.com/hCAQ7ZB.jpeg');">
+						<div class="text px-3 py-1">
+							<h2 class="mb-0"><a href="~/Shop/ProductDetails?id=ca1694c7-03a9-42d6-989d-a4b0867f06d7">Dây chà lưng</a></h2>
+						</div>
+					</div>
+					<div class="category-wrap ftco-animate img d-flex align-items-end" style="background-image: url('https://i.imgur.com/810CC41.jpeg');">
+						<div class="text px-3 py-1">
+							<h2 class="mb-0"><a href="~/Shop/ProductDetails?id=e46cd738-3e89-4d81-9e74-61243e2c793e">Bao tay tắm</a></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center mb-3 pb-3">
+				<div class="col-md-12 heading-section text-center ftco-animate">
+					<span class="subheading">Cập nhật thông tin</span>
+					<h2 class="mb-4">Blog</h2>
+					<p>Cập nhật những thông tin mới nhất về an toàn sức khoẻ và bảo vệ môi trường</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 d-flex ftco-animate">
+					<div class="blog-entry align-self-stretch d-md-flex">
+						<a href="~/Blog/Details?id=bbe9fece-807c-4fd5-b434-278b62564338" class="block-20" style="background-image: url('/img/ImgBlog/1711027012anh-nguyen-phu-tung-dang-nghien-cuu-tai-vung-nguyen-lieu_(1).jpg'); height: 300px;">
+						</a>
+						<div class="text d-block pl-md-4">
+							<div class="meta mb-3">
+								<div><a>9/28/2024</a></div>
+								<div><a>Admin</a></div>
+								<div><a class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+							</div>
+							<h3 class="heading"><a href="~/Blog/Details?id=bbe9fece-807c-4fd5-b434-278b62564338">Trải nghiệm chuyển đổi vật liệu công nghiệp sang vật liệu tự nhiên</a></h3>
+							<p>Ít ai ngờ, từ vật liệu tưởng chừng như bỏ đi là x...</p>
+							<p><a href="~/Blog/Details?id=bbe9fece-807c-4fd5-b434-278b62564338" class="btn btn-primary py-2 px-3">Đọc thêm</a></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 d-flex ftco-animate">
+					<div class="blog-entry align-self-stretch d-md-flex">
+						<a href="~/Blog/Details?id=7789f18a-1ca2-4235-a66f-5cd25b7953b9" class="block-20" style="background-image: url('/img/ImgBlog/280692201_5885391238154438_8620160783337727460_n.jpg'); height: 300px;">
+						</a>
+						<div class="text d-block pl-md-4">
+							<div class="meta mb-3">
+								<div><a>9/28/2024</a></div>
+								<div><a>Admin</a></div>
+								<div><a class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+							</div>
+							<h3 class="heading"><a href="~/Blog/Details?id=7789f18a-1ca2-4235-a66f-5cd25b7953b9">Sứ Mệnh Đưa Xơ Mướp Đến Tay Người Tiêu Dùng</a></h3>
+							<p>Xơ mướp là nguyên liệu có nguồn gốc từ thiên nhiê...</p>
+							<p><a href="~/Blog/Details?id=7789f18a-1ca2-4235-a66f-5cd25b7953b9" class="btn btn-primary py-2 px-3">Đọc thêm</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="ftco-section testimony-section">
+		<div class="container">
+			<div class="row justify-content-center mb-5 pb-3">
+				<div class="col-md-7 heading-section ftco-animate text-center">
+					<span class="subheading">Phản hồi</span>
+					<h2 class="mb-4">Những phản hồi của khách hàng</h2>
+					<p>Chúng tôi luôn hi vọng đem đến trải nghiệm tốt nhất trong từng sản phẩm</p>
+				</div>
+			</div>
+			<div class="row ftco-animate">
+				<div class="col-md-12">
+					<div class="carousel-testimony owl-carousel">
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5" style="background-image: url('/img/comment/448262288_1535455837319125_1730579060412037674_n.jpg');">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text text-center">
+									<p class="mb-5 pl-4 line">"Sử dụng bông tắm xơ mướp thật sự rất tuyệt vời! Da mình mềm mại và sạch sẽ hơn rất nhiều, cảm giác an toàn vì sản phẩm hoàn toàn tự nhiên."</p>
+									<p class="name">Nguyễn Minh Phương</p>
+									
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5" style="background-image: url('/img/comment/277707808_748858063164398_1966120575471751493_n.jpg');">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text text-center">
+									<p class="mb-5 pl-4 line">"Tôi rất ấn tượng với độ bền của bông tắm xơ mướp. Dùng nhiều lần mà vẫn giữ nguyên chất lượng, lại rất thân thiện với môi trường."</p>
+									<p class="name">Lê Anh Tuấn</p>
+									
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5" style="background-image: url('/img/comment/455066621_1965902550591281_305332582060055174_n.jpg');">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text text-center">
+									<p class="mb-5 pl-4 line">"Trải nghiệm tắm cùng bông xơ mướp thật sự khác biệt. Da tôi trở nên sạch mịn, không gây kích ứng, rất đáng để thử!"</p>
+									<p class="name">Hoàng Thị Thanh</p>
+									
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5" style="background-image: url('/img/comment/54731350_147927209565365_1074648190948474880_n.jpg');">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text text-center">
+									<p class="mb-5 pl-4 line">"Xơ mướp thật sự là lựa chọn tuyệt vời cho ai muốn vừa chăm sóc da vừa bảo vệ môi trường. Mình hoàn toàn hài lòng!"</p>
+									<p class="name">Phạm Quang Huy</p>
+									
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5" style="background-image: url('/img/comment/458986643_3939786749632081_7819878491561257185_n.jpg');">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text text-center">
+									<p class="mb-5 pl-4 line">"Sản phẩm bông tắm xơ mướp giúp tôi cảm thấy thư giãn và thoải mái sau mỗi lần tắm. Một sản phẩm thân thiện với thiên nhiên và tốt cho sức khỏe."</p>
+									<p class="name">Đinh Thu Hằng</p>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row no-gutters ftco-services">
+				<div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+					<div class="media block-6 services mb-md-0 mb-4">
+						<div class="icon bg-color-1 active d-flex justify-content-center align-items-center mb-2">
+							<span class="flaticon-shipped"></span>
+						</div>
+						<div class="media-body">
+							<h3 class="heading">Miên phí vận chuyển</h3>
+							<span>Với những đơn hàng từ 100k</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+					<div class="media block-6 services mb-md-0 mb-4">
+						<div class="icon bg-color-2 d-flex justify-content-center align-items-center mb-2">
+							<span class="flaticon-box"></span>
+						</div>
+						<div class="media-body">
+							<h3 class="heading">Đóng gói tiện lợi</h3>
+							<span>Sản phẩm sạch đẹp</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+					<div class="media block-6 services mb-md-0 mb-4">
+						<div class="icon bg-color-3 d-flex justify-content-center align-items-center mb-2">
+							<span class="flaticon-award"></span>
+						</div>
+						<div class="media-body">
+							<h3 class="heading">Chất lượng</h3>
+							<span>Sản phẩm tự nhiên</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
+					<div class="media block-6 services mb-md-0 mb-4">
+						<div class="icon bg-color-4 d-flex justify-content-center align-items-center mb-2">
+							<span class="flaticon-customer-service"></span>
+						</div>
+						<div class="media-body">
+							<h3 class="heading">Hỗ Trợ</h3>
+							<span>Hỗ Trợ 24/7</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<hr>
+</body>

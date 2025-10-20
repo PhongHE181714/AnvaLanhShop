@@ -1,3 +1,6 @@
+using GreenShop.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace GreenShop
 {
     public class Program
@@ -9,7 +12,14 @@ namespace GreenShop
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            builder.Services.AddDbContext<GreenShopContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnect"));
+            });
+
             var app = builder.Build();
+
+          
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -27,6 +37,8 @@ namespace GreenShop
             app.UseAuthorization();
 
             app.MapRazorPages();
+
+
 
             app.Run();
         }
