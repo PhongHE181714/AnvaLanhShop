@@ -34,18 +34,18 @@ namespace GreenShop.Pages.Products
                 searchString = "";
             }
             Guid? userId = getIdFromToken();
-            if (userId == null)
-            {
-                return RedirectToPage("../Shop/Product");
-            }
-            else
-            {
-                GreenShop.Models.User u = await _context.Users.Include(c => c.Role).FirstOrDefaultAsync(c => c.Id == userId);
-                if (!u.Role.Name.Equals("Admin"))
-                {
-                    return RedirectToPage("../Shop/Product");
-                }
-            }
+            //if (userId == null)
+            //{
+            //    return RedirectToPage("../Shop/Product");
+            //}
+            //else
+            //{
+            //    GreenShop.Models.User u = await _context.Users.Include(c => c.Role).FirstOrDefaultAsync(c => c.Id == userId);
+            //    if (!u.Role.Name.Equals("Admin"))
+            //    {
+            //        return RedirectToPage("../Shop/Product");
+            //    }
+            //}
             this.searchString = searchString;
 
             var query = _context.Products.AsQueryable();
