@@ -5,7 +5,7 @@ using GreenShop.Models;
 using GreenShop.Pages.Shop;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Project_PRN221.Pages.Blog
+namespace GreenShop.Pages.Blog
 {
     public class IndexModel : PageModel
     {
