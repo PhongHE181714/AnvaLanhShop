@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Accounts
+namespace GreenShop.Pages.Accounts
 {
     public class DeleteModel : PageModel
     {
@@ -19,7 +19,7 @@ namespace Project_PRN221.Pages.Accounts
         }
 
         [BindProperty]
-      public Project_PRN221.Models.User User { get; set; } = default!;
+      public GreenShop.Models.User User { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {

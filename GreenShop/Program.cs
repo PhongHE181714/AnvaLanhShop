@@ -38,7 +38,11 @@ namespace GreenShop
 
             app.MapRazorPages();
 
-
+            app.MapGet("/", context =>
+            {
+                context.Response.Redirect("/Shop");
+                return Task.CompletedTask;
+            });
 
             app.Run();
         }
