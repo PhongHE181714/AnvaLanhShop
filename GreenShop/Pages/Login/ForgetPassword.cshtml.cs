@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json.Linq;
+//using Newtonsoft.Json.Linq;
 
 namespace Project_PRN222.Pages.Login
 {
