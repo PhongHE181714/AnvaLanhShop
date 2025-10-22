@@ -162,7 +162,10 @@
 		<div class="container">
 			<div class="row no-gutters slider-text align-items-center justify-content-center">
 				<div class="col-md-9 ftco-animate text-center">
-					<p class="breadcrumbs"><span class="mr-2"><a href="~/Shop">Trang chủ</a></span> <span>Sản Phẩm</span></p>
+					<p class="breadcrumbs">
+						<span class="mr-2"><a href="~/Shop">Trang chủ</a></span>
+						<span>Sản Phẩm</span>
+					</p>
 					<h1 class="mb-0 bread">EcoNest</h1>
 				</div>
 			</div>
@@ -172,6 +175,40 @@
 	<section class="ftco-section">
 		<div class="container">
 
+			<!-- Bộ lọc và tìm kiếm -->
+			<div class="row mb-5">
+				<div class="col-md-12">
+					<form method="get" asp-page="/Shop/Product" class="form-inline justify-content-center">
+
+						<!-- Tìm kiếm -->
+						<input type="text" name="search" class="form-control mr-2 mb-2" placeholder="Tìm kiếm sản phẩm..." value="@Model.Search" style="min-width:200px;" />
+
+						<!-- Lọc giá -->
+						<input type="number" name="priceLow" class="form-control mr-2 mb-2" placeholder="Giá thấp nhất" value="@Model.priceLow" style="width:150px;" />
+						<input type="number" name="priceHigh" class="form-control mr-2 mb-2" placeholder="Giá cao nhất" value="@Model.priceHigh" style="width:150px;" />
+
+						<!-- Danh mục -->
+						<select name="Category" class="form-control mr-2 mb-2">
+							<option value="">Tất cả danh mục</option>
+							@foreach (var cate in Model.categories)
+							{
+								<option value="@cate.Id" selected="@(Model.CategoryId == cate.Id.ToString())">@cate.Name</option>
+							}
+						</select>
+
+						<!-- Sắp xếp -->
+						<select name="sort" class="form-control mr-2 mb-2">
+							<option value="">Mặc định</option>
+							<option value="1" selected="@(Model.Sort == 1)">Mới nhất</option>
+							<option value="2" selected="@(Model.Sort == 2)">Giá tăng dần</option>
+							<option value="3" selected="@(Model.Sort == 3)">Giá giảm dần</option>
+							<option value="4" selected="@(Model.Sort == 4)">Đánh giá cao</option>
+						</select>
+
+						<button type="submit" class="btn btn-primary mb-2">Lọc</button>
+					</form>
+				</div>
+			</div>
 
 			<div class="row">
 				<!-- Products Display -->
@@ -181,12 +218,12 @@
 						{
 							<div class="col-md-12 text-center">
 								<img src="https://psc.com.bd/catalog/view/theme/paradise_scientific/image/no-products-found.png" alt="No Products Found" class="img-fluid" style="max-width: 500px;">
-								<p>Không có sản phầm</p>
+								<p>Không có sản phẩm</p>
 								<br />
 							</div>
 						}
 						else
-						{														
+						{
 							<div class="container">
 								<div class="row justify-content-center mb-3 pb-3">
 									<div class="col-md-12 heading-section text-center ftco-animate">
@@ -194,13 +231,13 @@
 									</div>
 								</div>
 							</div>
-							@foreach (var product in Model.ProductT)
+
+							@foreach (var product in Model.Product)
 							{
 								<div class="col-md-6 col-lg-3 ftco-animate">
 									<div class="product">
 										<a href="ProductDetails?id=@product.Id" class="img-prod">
-											<img class="img-fluid"
-												 src="@product.Image">
+											<img class="img-fluid" src="@product.Image" />
 											<span class="status">@Math.Round(product.Rate, 1) *</span>
 											<div class="overlay"></div>
 										</a>
@@ -208,7 +245,10 @@
 											<h3><a href="#">@product.Name</a></h3>
 											<div class="d-flex">
 												<div class="pricing">
-													<p class="price"><span class="mr-2 price-dc">@(product.Price * 10 / 8) VNĐ</span><span class="price-sale">@product.Price VNĐ</span></p>
+													<p class="price">
+														<span class="mr-2 price-dc">@(product.Price * 10 / 8) VNĐ</span>
+														<span class="price-sale">@product.Price VNĐ</span>
+													</p>
 												</div>
 											</div>
 											<div class="bottom-area d-flex px-3">
@@ -228,27 +268,27 @@
 															<span><i class="ion-ios-cart"></i></span>
 														</a>
 													}
-
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							}
-							<div class="container">
+
+							<div class="container mt-5">
 								<div class="row justify-content-center mb-3 pb-3">
 									<div class="col-md-12 heading-section text-center ftco-animate">
 										<h2 class="mb-4">Combo Khuyến Mãi</h2>
 									</div>
 								</div>
 							</div>
+
 							@foreach (var product in Model.ProductC)
 							{
 								<div class="col-md-6 col-lg-3 ftco-animate">
 									<div class="product">
 										<a href="ProductDetails?id=@product.Id" class="img-prod">
-											<img class="img-fluid"
-												 src="@product.Image"/>
+											<img class="img-fluid" src="@product.Image" />
 											<span class="status">@Math.Round(product.Rate, 1) *</span>
 											<div class="overlay"></div>
 										</a>
@@ -256,7 +296,10 @@
 											<h3><a href="#">@product.Name</a></h3>
 											<div class="d-flex">
 												<div class="pricing">
-													<p class="price"><span class="mr-2 price-dc">@(product.Price * 10 / 8) VNĐ</span><span class="price-sale">@product.Price VNĐ</span></p>
+													<p class="price">
+														<span class="mr-2 price-dc">@(product.Price * 10 / 8) VNĐ</span>
+														<span class="price-sale">@product.Price VNĐ</span>
+													</p>
 												</div>
 											</div>
 											<div class="bottom-area d-flex px-3">
@@ -276,7 +319,6 @@
 															<span><i class="ion-ios-cart"></i></span>
 														</a>
 													}
-
 												</div>
 											</div>
 										</div>
@@ -286,45 +328,70 @@
 						}
 					</div>
 
+					<!-- ✅ Phân trang giữ filter/sort/search -->
 					<div class="row mt-5">
 						<div class="col text-center">
 							<div class="block-27">
-								@{
-									var max = ViewBag.pageLength;
-									var page = ViewBag.page;
-									var next = page + 1;
-									var pre = page - 1;
-								}
-								<ul>
-									@if (page > 1)
-									{
-										<li><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = pre, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">Pre</a></li>
-									}
+								<form method="get" asp-page="/Shop/Product" id="paginationForm">
+									<!-- Giữ lại toàn bộ giá trị filter/sort hiện tại -->
+									<input type="hidden" name="Category" value="@Model.CategoryId" />
+									<input type="hidden" name="search" value="@Model.Search" />
+									<input type="hidden" name="sort" value="@Model.Sort" />
+									<input type="hidden" name="priceLow" value="@Model.priceLow" />
+									<input type="hidden" name="priceHigh" value="@Model.priceHigh" />
+									<input type="hidden" name="page" id="pageInput" value="@Model.CurrentPage" />
 
-									@for (int i = 1; i <= max; i++)
-									{
-										@if (page == i)
+									<ul>
+										@if (Model.CurrentPage > 1)
 										{
-											<li class="active"><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = i, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">@i</a></li>
+											<li>
+												<button type="button" class="page-link" onclick="goToPage(@(Model.CurrentPage - 1))">Pre</button>
+											</li>
 										}
-										else
+
+										@for (int i = 1; i <= Model.TotalPages; i++)
 										{
-											<li><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = i, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">@i</a></li>
+											if (Model.CurrentPage == i)
+											{
+												<li class="active"><a href="#">@i</a></li>
+											}
+											else
+											{
+												<li>
+													<button type="button" class="page-link" onclick="goToPage(@i)">@i</button>
+												</li>
+											}
 										}
-									}
-									@if (page < max)
-									{
-										<li><a href="@Url.Action("ProductList", new { CategoryId = ViewBag.CategoryId, page = next, priceLow = ViewBag.priceLow, priceHigh = ViewBag.priceHigh, sort = ViewBag.Sort })">Next</a></li>
-									}
-								</ul>
+
+										@if (Model.CurrentPage < Model.TotalPages)
+										{
+											<li>
+												<button type="button" class="page-link" onclick="goToPage(@(Model.CurrentPage + 1))">Next</button>
+											</li>
+										}
+									</ul>
+								</form>
 							</div>
 						</div>
 					</div>
+
+					<script>
+						function goToPage(page) {
+							document.getElementById("pageInput").value = page;
+							document.getElementById("paginationForm").submit();
+						}
+					</script>
+
+					<!-- ✅ Hiển thị thông tin trang hiện tại -->
+					<div class="text-center mt-3">
+						<p>Trang @Model.CurrentPage / @Model.TotalPages</p>
+					</div>
+
 				</div>
 			</div>
 		</div>
 	</section>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
-
 </body>
+

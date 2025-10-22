@@ -1,3 +1,4 @@
+using GreenShop.Hubs;
 using GreenShop.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,7 @@ namespace GreenShop
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddSignalR();
             // Add services to the container.
             builder.Services.AddRazorPages();
 
@@ -35,7 +36,8 @@ namespace GreenShop
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.MapHub<ProductHubs>("/productHub");
+            app.MapHub<CategoryHubs>("/categoryHub");
             app.MapRazorPages();
 
             app.MapGet("/", context =>
