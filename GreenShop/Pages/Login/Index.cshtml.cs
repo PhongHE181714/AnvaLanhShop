@@ -3,21 +3,21 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GreenShop.Models;
-//using GreenShop.Service;
 using Microsoft.EntityFrameworkCore;
+using GreenShop.Service;
 
 namespace GreenShop.Pages.Login
 {
 	public class LoginPageModel : PageModel
 	{
 		private readonly GreenShopContext _context;
-		//private readonly AuthServicecs _authService;
+		private readonly AuthServicecs _authService;
 
-		//public LoginPageModel(GreenShopContext context, AuthServicecs authService)
-		//{
-		//	_context = context;
-		//	_authService = authService;
-		//}
+		public LoginPageModel(GreenShopContext context, AuthServicecs authService)
+		{
+			_context = context;
+			_authService = authService;
+		}
 
 		public IActionResult OnGet()
 		{
@@ -35,14 +35,14 @@ namespace GreenShop.Pages.Login
 				ModelState.AddModelError("LoginFailed", "Email or password is incorrect");
 				return Page();
 			}
-			//if (BCrypt.Net.BCrypt.Verify(password, user.Password) == false)
-			//{
-			//	ModelState.AddModelError("LoginFailed", "Email or password is incorrect");
-			//	return Page();
-			//}
+			if (BCrypt.Net.BCrypt.Verify(password, user.Password) == false)
+			{
+				ModelState.AddModelError("LoginFailed", "Email or password is incorrect");
+				return Page();
+			}
 
-			//var token = await _authService.CreateToken(user);
-			//Response.Cookies.Append("AuthToken", token);
+			var token = await _authService.CreateToken(user);
+			Response.Cookies.Append("AuthToken", token);
 
 			return RedirectToPage("/Shop/Index");
 		}
