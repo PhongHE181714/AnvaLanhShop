@@ -1,0 +1,82 @@
+﻿@page
+@model Project_PRN221.Pages.Dashboard.IndexModel
+@{
+    ViewBag.Title = "Tab Title name";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="~/path/to/soft-ui-dashboard.min.css" /> <!-- Adjust path as needed -->
+</head>
+<body>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <div class="container-fluid py-4">
+            <h2 class="text-gradient text-primary">Order Count: @ViewBag.OrderCount</h2>
+            <h2 class="text-gradient text-primary">Money Count: @ViewBag.MoneyCount</h2>
+            <h2 class="text-gradient text-primary">View Count: @ViewBag.ViewCount</h2>
+            <div class="card mt-4">
+                <div class="card-header p-3">
+                    <h6 class="mb-0">User and Product Counts</h6>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Username</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Money</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.UserCount)
+                                {
+                                    <tr>
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-weight-bold">@item.UserName</span>
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-weight-bold">@item.TotalPrice</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-header p-3">
+                    <h6 class="mb-0">Product Counts</h6>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product Name</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity Sold</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.ProductCount)
+                                {
+                                    <tr>
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-weight-bold">@item.ProductName</span>
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-weight-bold">@item.TotalQuantitySold</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
