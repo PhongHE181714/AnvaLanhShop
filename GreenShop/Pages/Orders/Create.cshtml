@@ -1,0 +1,87 @@
+﻿@page
+@model Project_PRN221.Pages.Orders.CreateModel
+@{
+    ViewBag.Title = "add order";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
+}
+
+<head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Add, Edit Temp</h2>
+            </div>
+
+            <div class="col-3">
+                <form method="get" action="" id="changeForm">
+                    <input type="hidden" name="id" id="submitId"  />
+                </form>
+
+                <form method="post" action="">
+                    <input type="hidden" />
+                    @{
+                        string selectedValue = Model.userId;
+                    }
+
+                    <!-- ComboBox -->
+                    <div class="mb-3">
+                        <label for="category" class="form-label">User</label>
+                        <select class="form-select" name="userId" id="userId" onchange="updateAddress()" asp-for="@selectedValue">
+                            <option value="0">None</option>
+                            @foreach (var item in Model.user)
+                            {
+                                <option value="@item.Id">@item.Username</option>
+                            }
+
+                        </select>
+                    </div>
+                    <!-- ComboBox -->
+                    <div class="mb-3">
+                        <label for="category" class="form-label">ShipmentAddress</label>
+                        <select class="form-select" name="ShipmentDetailsId" id="shipId">
+                            @if (Model.shipmentDetails !=null)
+                            {
+                                @foreach (var item in Model.shipmentDetails)
+                                {
+                                    <option value="@item.Id">@item.Address</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                    <!-- ComboBox -->
+                    
+                    <!-- Float Price -->
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" step="0.01" class="form-control" id="price" name="TotalPrice" placeholder="Enter price">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Note</label>
+                        <input type="text" class="form-control" id="name" name="Note">
+                    </div>
+
+                    <button type="submit" onclick="confirmCreate()" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+<script>
+    function confirmCreate() {
+        return confirm('Are you sure you want to create this item?');
+    }
+    function updateAddress() {
+        var from = $("#userId").val();
+        $("#submitId").val(from);
+        $("#changeForm").submit();
+    }
+</script>
