@@ -1,0 +1,55 @@
+﻿@page
+@model Project_PRN221.Pages.Categories.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
+
+}
+
+<h1>Edit</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Category.Id" />
+            <div class="form-group">
+                <label asp-for="Category.Name" class="control-label"></label>
+                <input asp-for="Category.Name" class="form-control" />
+                <span asp-validation-for="Category.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category.Status" class="control-label"></label>
+                <input asp-for="Category.Status" class="form-control" />
+                <span asp-validation-for="Category.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+
+<script type="text/javascript">
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/categoryHub")
+        .build();
+
+    connection.on("ReceiveCategoryUpdate", function (categoryId, action) {
+        alert("Successfully edit " + action + ": " + categoryId);
+        // Thực hiện hành động cụ thể, ví dụ như cập nhật danh sách sinh viên
+    });
+
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
+</script>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+

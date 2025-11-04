@@ -1,0 +1,131 @@
+﻿@page
+@model Project_PRN221.Pages.Categories.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Category table</h6>
+                        <a asp-page="Create" class="btn btn-primary">Create</a>
+                    </div>
+
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Category Id
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Name
+                                        </th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Status
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Category)
+                                    {
+                                        <tr>
+                                            <td class="text-secondary text-xs font-weight-bold">
+                                                @Html.DisplayFor(modelItem => item.Id)
+                                            </td>
+                                            <td class="text-secondary text-xs font-weight-bold">
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+
+
+                                            <td>
+                                                @if (item.Status == 1)
+                                                {
+                                                    <span class="badge badge-sm bg-gradient-success">Active</span>
+                                                }
+                                                else if (item.Status == 0)
+                                                {
+                                                    <span class="badge badge-sm bg-gradient-secondary">InActive</span>
+                                                }
+                                            </td>
+                                            <td class="text-secondary text-xs font-weight-bold">
+                                                <a href="Categories/Delete?id=@item.Id" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                                                <a href="Categories/Edit?id=@item.Id" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Update">&#xE254;</i></a>
+
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix" style="display:flex;align-items:flex-end;d">
+                            @{
+                                var max = Model.pageLength;
+                                var page = Model.page;
+                                var next = page + 1;
+                                var pre = page - 1;
+
+                            }
+
+                            <ul class="pagination">
+                                @if (page > 1)
+                                {
+                                    <li class="page-item"><a href="?Pag=@pre" class="page-link">Previous</a></li>
+
+                                }
+
+                                @for (int i = 1; i <= max; i++)
+                                {
+                                    @if (page == i)
+                                    {
+                                        <li class="page-item active"><a href="?Pag=@i" class="page-link">@i</a></li>
+                                    }
+                                    else
+
+                                    {
+                                        <li class="page-item"><a href="?Pag=@i" class="page-link">@i</a></li>
+                                    }
+
+                                }
+                                @if (page < max)
+                                {
+                                    <li class="page-item "><a href="?Pag=@next" class="page-link">Next</a></li>
+
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+
+<script type="text/javascript">
+    
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/categoryHub")
+        .build();
+
+    connection.on("ReceiveCategoryUpdate", function (categoryId, action) {
+        alert("Category " + action + ": " + categoryId);
+        // Thực hiện hành động cụ thể, ví dụ như cập nhật danh sách sinh viên
+        location.reload();
+    });
+
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
+</script>
