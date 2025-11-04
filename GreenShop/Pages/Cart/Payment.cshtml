@@ -1,0 +1,88 @@
+﻿@page
+@model Project_PRN221.Pages.Shop.PaymentModel
+@{
+    ViewBag.Title = "Shop Page";
+    Layout = "~/Pages/Shared/ShopLayout.cshtml";
+}
+
+<div class="container">
+    <!-- Top Border Line -->
+    <div class="header-line"></div>
+
+    @if (Model.url != null && Request.Query["method"] == "1")
+    {
+        <div class="text-center">
+            <h2>Quét Mã QR</h2>
+        </div>
+
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <!-- QR Code Section -->
+                <div class="col-md-5 d-flex flex-column align-items-center section-box">
+                    <div class="qr-section">
+                        <!-- Increase the max-width to make the QR image bigger -->
+                        <img src="@Model.url" alt="QR Code" class="img-fluid" style="max-width: 400px;" />
+                    </div>
+                </div>
+
+                <!-- Hướng Dẫn Section -->
+                <div class="col-md-5 section-box">
+                    <div class="guide-section">
+                        <h3>Hướng dẫn chuyển khoản</h3>
+                        <p><strong>Nội dung chuyển khoản:</strong> Tên + Số Điện Thoại + chuyen khoan EcoNest</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Order Button -->
+            <div class="text-center mt-3">
+                <a href="../Shop/OrderList" class="btn btn-primary">Xem đơn hàng</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h3>Giao dịch thành công</h3>
+            <p>Đơn hàng của bạn đang được xử lý.</p>
+        </div>
+        <div class="text-center mt-3">
+            <a href="../Shop/OrderList" class="btn btn-primary">Xem đơn hàng</a>
+        </div>
+        <br>
+    }
+</div>
+
+<style>
+    .qr-section img {
+        border: 2px solid #82ae46;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    h3 {
+        color: #82ae46;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+
+    .guide-section {
+        border: 2px solid #82ae46; /* Match QR section border */
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        height: fit-content; /* Adjust height to fit content */
+    }
+
+        .guide-section h3 {
+            font-size: 22px;
+            color: #82ae46;
+        }
+
+    .row {
+        margin: 0 auto; /* Center the row */
+        max-width: 1200px; /* Optional: limit max width */
+    }
+</style>

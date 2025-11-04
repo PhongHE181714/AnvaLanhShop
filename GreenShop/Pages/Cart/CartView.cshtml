@@ -1,0 +1,447 @@
+﻿@page
+@model Project_PRN221.Pages.Cart.CartViewModel
+
+@{
+    Layout = "~/Pages/Shared/ShopLayout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        .remove-icon {
+            display: inline-block;
+            border: 1px solid #82ae46;
+            width: 30px; /* Kích thước biểu tượng */
+            height: 30px;
+            text-align: center; /* Căn giữa dấu 'X' */
+            line-height: 30px; /* Đảm bảo dấu 'X' căn giữa theo chiều dọc */
+            color: black; /* Màu của dấu 'X' */
+            font-size: 20px; /* Kích thước dấu 'X' */
+            transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+        }
+
+            .remove-icon:hover {
+                background-color: #82ae46; /* Màu khi hover */
+                color: black;
+            }
+
+
+</style>
+</head>
+<body class="goto-here">
+    <div class="hero-wrap hero-bread" style="background-image: url('/img/ban-sao-ban-sao-ban-sao-ban-sao-img_7868-8993.jpeg');">
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-center justify-content-center">
+                <div class="col-md-9 ftco-animate text-center">
+                    <p class="breadcrumbs"><span class="mr-2"><a>Welcome</a></span></p>
+                    <h1 class="mb-0 bread">Giỏ Hàng</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="nameC" value="@Model.City" />
+    <input type="hidden" id="nameD" value="@Model.District" />
+    <input type="hidden" id="nameW" value="@Model.Ward" />
+    @if (Model.shipment != null)
+    {
+        <input type="hidden" id="shipment" value="@Model.shipment.Address" />
+    }
+
+    @if (Model.Carts.Count > 0)
+    {
+        <section class="ftco-section ftco-cart">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 ftco-animate">
+                        <div class="cart-list">
+                            <table class="table">
+                                <thead class="thead-primary">
+                                    <tr class="text-center">
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>Sản Phẩm</th>
+                                        <th>Giá</th>
+                                        <th>Số Lượng</th>
+                                        <th>Tổng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Carts)
+                                    {
+                                        <tr class="text-center">
+                                            <td>
+                                                <a asp-page="/Cart/Delete" asp-route-changeAction="-1" asp-route-productId="@item.Product.Id" class="remove-icon">
+                                                    <span class="ion-ios-close"></span>
+                                                </a>
+                                            </td>
+
+                                            <td class="image-prod"><div class="img" style="background-image:url('@item.Product.Image');"></div></td>
+
+                                            <td class="product-name">
+                                                <h3>@item.Product.Name</h3>
+                                                @{
+                                                    var description = item.Product.Description;
+                                                    var displayDescription = description.Length > 100 ? description.Substring(0, 100) + "..." : description;
+                                                }
+                                                @Html.Raw(displayDescription)
+                                            </td>
+
+                                            <td class="price">$@item.Product.Price</td>
+
+                                            <td class="quantity">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <a href="Edit?changeAction=-1&productId=@item.Product.Id" class="btn btn-outline-secondary">-</a>
+                                                    </div>
+                                                    <input type="text" name="quantity" class="quantity form-control input-number" value="@item.Quantity" min="1" max="100" disabled>
+                                                    <div class="input-group-append">
+                                                        <a href="Edit?changeAction=1&productId=@item.Product.Id" class="btn btn-outline-secondary">+</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="total">$@(item.Product.Price * item.Quantity)</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                        <div class="cart-total mb-3">
+                            <h3>Địa Chỉ Giao Hàng</h3>
+                            @if (Model.shipment != null)
+                            {
+                                <p class="d-flex">
+                                    <span>Địa Chỉ</span>
+                                    <span>@Model.shipment.Address</span>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Số Điện Thoại</span>
+                                    <span>@Model.shipment.PhoneNumber</span>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Người Nhận</span>
+                                    <span>@Model.shipment.Receiver</span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    UserId: @Model.user
+                                    <span></span>
+                                </p>
+                            }
+                        </div>
+
+                        <!-- Di chuyển nút ra ngoài cart-total -->
+                        <div class="d-flex justify-content-between">
+                            @if (Model.shipment != null)
+                            {
+                                <button type="button" class="btn btn-warning py-2 px-4" data-toggle="modal" data-target="#editShipmentModal">
+                                    Điều Chỉnh Thông Tin
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary py-3 px-4" data-toggle="modal" data-target="#addShipmentModal">Thêm Địa Chỉ Mới</button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                        <form action="Payment" id="paymentId">
+                            <div class="cart-total mb-3">
+                                <h3>Tổng Giỏ Hàng</h3>
+                                <p class="d-flex">
+                                    <span>Phương Thức Thanh Toán</span>
+
+                                    <input type="hidden" name="price" value="@Model.totalPrice" />
+
+                                    <select name="method">
+                                        <option value="0">COD</option>
+                                        <option value="1">Ngân Hàng Trực Tuyến</option>
+
+                                    </select>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Phí Vận Chuyển</span>
+                                    <span>$3.00</span>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Giảm Giá</span>
+                                    <span>$3.00</span>
+                                </p>
+                                <hr>
+                                <p class="d-flex total-price">
+                                    <span>Tổng Thanh Toán</span>
+                                    <span>$@Model.totalPrice</span>
+                                </p>
+                            </div>
+                        </form>
+                        <p><button type="button" onclick="makePayment()" class="btn btn-primary py-3 px-4">Thanh Toán</button></p>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="ftco-section ftco-cart">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 ftco-animate">
+                        <div class="cart-list">
+                            <h1></h1>
+                            <!--cart trống-->
+                            <div style="text-align: center;">
+                                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f4.png" alt="No Order Found" class="img-fluid" style="max-width: 200px; display: block; margin: auto;">
+                                <label class="mr-2" style="display: block;">Giỏ Hàng Của Bạn Trống</label>
+                            </div>
+                            <p style="text-align: center;">
+                                <a href="~/Shop/Product" class="btn btn-primary py-3 px-4">Danh Sách Sản Phẩm</a>
+                            </p>
+                            <div class="text-center mt-3">
+                                <a href="../Shop/OrderList" class="btn btn-primary">Xem đơn hàng</a>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    }
+
+    <div class="modal fade" id="addShipmentModal" tabindex="-1" role="dialog" aria-labelledby="addShipmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addShipmentModalLabel">Thêm Địa Chỉ Mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="shipmentForm" action="AddNewShipment" method="get">
+                        <div class="form-group">
+                            <label for="receiver">Người Nhận</label>
+                            <input type="text" class="form-control" id="receiver" name="receiver" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PhoneNumber">Số Điện Thoại</label>
+                            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">Tỉnh/Thành phố</label>
+                            <select id="city" class="form-control" name="city" required>
+                                <option value="">Chọn tỉnh/thành phố</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="district">Quận/Huyện</label>
+                            <select id="district" class="form-control" name="district" required>
+                                <option value="">Chọn quận/huyện</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ward">Phường/Xã</label>
+                            <select id="ward" class="form-control" name="ward" required>
+                                <option value="">Chọn phường/xã</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="street">Địa Chỉ</label>
+                            <input type="text" class="form-control" id="street" name="street" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" hidden>UserId</label>
+                            <input name="UserId" type="hidden" value="" class="form-control" readonly />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.shipment != null)
+    {
+        <!-- Modal để chỉnh sửa thông tin Shipment -->
+        <div class="modal fade" id="editShipmentModal" tabindex="-1" role="dialog" aria-labelledby="editShipmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editShipmentModalLabel">Edit Shipment Information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="EditShipment" method="get">
+                            <div class="form-group">
+                                <label for="receiver">Người nhận</label>
+                                <input type="text" class="form-control" id="receiver" name="receiver" value="@Model.shipment.Receiver" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Số điện thoại</label>
+                                <input type="text" class="form-control" id="phoneNumber" name="PhoneNumber" value="@Model.shipment.PhoneNumber" required>
+                            </div>
+                            <!-- City -->
+                            <div class="form-group">
+                                <label for="city">Chọn tỉnh/thành phố</label>
+                                <select id="city" class="form-control" name="city" required>
+                                    <option value="">Chọn tỉnh/thành phố</option>
+                                </select>
+                            </div>
+                            <!-- District -->
+                            <div class="form-group">
+                                <label for="district">Chọn quận/huyện</label>
+                                <select id="district" class="form-control" name="district" required>
+                                    <option value="">Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                            <!-- Ward -->
+                            <div class="form-group">
+                                <label for="ward">Chọn phường/xã</label>
+                                <select id="ward" class="form-control" name="ward" required>
+                                    <option value="">Chọn phường/xã</option>
+                                </select>
+                            </div>
+                            <!-- Street -->
+                            <div class="form-group">
+                                <label for="street">Địa Chỉ</label>
+                                <input type="text" class="form-control" id="street" name="street" value="@Model.Street" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status">Đặt làm địa chỉ mặc định</label>
+                                <input type="checkbox" id="status" name="status" value="1" @(Model.shipment.Status == 1 ? "checked" : "")>
+                            </div>
+                            <input type="hidden" name="id" value="@Model.shipment.Id">
+                            <input type="hidden" name="userId" value="@Model.shipment.UserId">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var Parameter = {
+                url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+                method: "GET",
+                responseType: "application/json",
+            };
+            var promise = axios(Parameter);
+            promise.then(function (result) {
+                // Áp dụng cho cả modal Add và tất cả các modal Edit
+                renderCity(result.data, 'addShipmentModal');  // Modal Add
+                document.querySelectorAll("[id^='editShipmentModal']").forEach(function (modal) {
+                    var modalId = modal.id;
+                    renderCity(result.data, modalId);
+                }); // Modal Add
+
+
+            });
+
+            function renderCity(data, modalId) {
+                var cities = document.querySelector(`#${modalId} select[name='city']`);
+                var districts = document.querySelector(`#${modalId} select[name='district']`);
+                var wards = document.querySelector(`#${modalId} select[name='ward']`);
+
+
+
+
+
+                // Hiển thị danh sách tỉnh
+                for (const city of data) {
+                    let option = new Option(city.Name, city.Name);
+                    cities.options[cities.options.length] = option;
+
+                }
+
+                // Khi chọn tỉnh, cập nhật danh sách quận huyện
+                cities.onchange = function () {
+                    districts.length = 1; // Reset danh sách quận huyện
+                    wards.length = 1; // Reset danh sách phường xã
+
+                    if (this.value !== "") {
+                        const selectedCity = data.find((city) => city.Name === this.value);
+                        for (const district of selectedCity.Districts) {
+                            let option = new Option(district.Name, district.Name);
+                            districts.options[districts.options.length] = option;
+
+                        }
+                    }
+                };
+
+                // Khi chọn quận huyện, cập nhật danh sách phường xã
+                districts.onchange = function () {
+                    wards.length = 1; // Reset danh sách phường xã
+
+                    const selectedCity = data.find((city) => city.Name === cities.value);
+                    const selectedDistrict = selectedCity.Districts.find((district) => district.Name === this.value);
+
+                    if (this.value !== "") {
+                        for (const ward of selectedDistrict.Wards) {
+                            let option = new Option(ward.Name, ward.Name);
+                            wards.options[wards.options.length] = option;
+
+                        }
+                    }
+                };
+            }
+
+
+            document.querySelectorAll('form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    var modalId = form.closest('.modal').id;
+                    var cities = document.querySelector(`#${modalId} select[name='city']`);
+                    var districts = document.querySelector(`#${modalId} select[name='district']`);
+                    var wards = document.querySelector(`#${modalId} select[name='ward']`);
+
+                    var selectedCity = cities.options[cities.selectedIndex].value;
+                    var selectedDistrict = districts.options[districts.selectedIndex].value;
+                    var selectedWard = wards.options[wards.selectedIndex].value;
+
+                    // Kiểm tra xem các giá trị có được chọn chưa
+                    if (!selectedCity || !selectedDistrict || !selectedWard) {
+                        e.preventDefault();
+                        alert("Vui lòng chọn đầy đủ Phường/Xã, Quận/Huyện, Tỉnh/Thành phố.");
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function makePayment() {
+
+            var shipment = document.getElementById("shipment");
+            if (shipment == null){
+                alert("Bạn cần thêm địa chỉ để hoàn thành việc order!");
+            } else {
+                document.getElementById("paymentId").submit();
+
+            }
+        }
+    </script>
+</body>
+
