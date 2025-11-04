@@ -52,7 +52,9 @@ namespace GreenShop.Pages.Shop
             // ✅ Load danh mục sản phẩm
             categories = await _context.Categories.ToListAsync();
 
-            var products = _context.Products.AsQueryable();
+            var products = _context.Products
+                 .Where(p => p.Status == 1)
+                 .AsQueryable();
 
             // --- Lọc danh mục ---
             if (!string.IsNullOrEmpty(Category))

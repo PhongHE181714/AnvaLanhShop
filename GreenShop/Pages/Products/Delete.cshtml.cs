@@ -19,7 +19,7 @@ namespace GreenShop.Pages.Products
         }
 
         [BindProperty]
-      public Product Product { get; set; } = default!;
+        public Product Product { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -34,10 +34,8 @@ namespace GreenShop.Pages.Products
             {
                 return NotFound();
             }
-            else 
-            {
-                Product = product;
-            }
+
+            Product = product;
             return Page();
         }
 
@@ -47,13 +45,25 @@ namespace GreenShop.Pages.Products
             {
                 return NotFound();
             }
+
             var product = await _context.Products.FindAsync(id);
 
-            if (product != null)
+            if (product == null)
             {
-                Product = product;
-                _context.Products.Remove(Product);
+                return NotFound();
+            }
+
+            // Soft delete: chỉ cập nhật Status = 0
+            product.Status = 0;
+
+            try
+            {
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Sản phẩm đã được ẩn (xóa mềm)!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Lỗi khi ẩn sản phẩm: {ex.Message}";
             }
 
             return RedirectToPage("./Index");

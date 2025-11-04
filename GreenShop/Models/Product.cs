@@ -19,6 +19,8 @@ public partial class Product
 
     public string Description { get; set; } = null!;
 
+    public virtual Category? Category { get; set; }
+
     public Guid CategoryId { get; set; }
 
     public int Status { get; set; }
