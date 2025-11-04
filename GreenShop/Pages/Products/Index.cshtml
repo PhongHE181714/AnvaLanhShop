@@ -1,163 +1,253 @@
 ﻿@page
 @model GreenShop.Pages.Products.IndexModel
-
 @{
     ViewData["Title"] = "Product Management";
     Layout = "~/Pages/Shared/AdminLayout.cshtml";
-    var searchString = Model.searchString as string;
 }
-
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        .table-fixed {
+            table-layout: fixed;
+            width: 100%;
+        }
 
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+            .table-fixed th, .table-fixed td {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+        .img-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .action-btn {
+            font-size: 1.2rem;
+            margin: 0 4px;
+            color: #495057;
+        }
+
+            .action-btn:hover {
+                color: #0d6efd;
+            }
+
+        #colStatus {
+            transition: all .3s;
+        }
+    </style>
+</head>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
+                    <!-- Header -->
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                        <h6>Product Table</h6>
-                        <a href="/Products/Create" class="btn btn-primary">Create</a>
+                        <h6>Product Management</h6>
+                        <div>
+                            <button id="toggleStatus" class="btn btn-outline-secondary btn-sm me-2">
+                                <i class="material-icons">visibility</i> Status
+                            </button>
+                            <a href="/Products/Create" class="btn btn-success btn-sm">
+                                <i class="material-icons">add</i> Create New
+                            </a>
+                        </div>
                     </div>
-
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <!-- Search Form -->
-                        <form method="get" class="mb-3">
-                            <div class="row">
+                    <div class="card-body px-4 pt-3 pb-2">
+                        <!-- Filters -->
+                        <form method="get" class="mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <input type="text" name="searchString" value="@Model.searchString"
+                                           placeholder="Search by product name..." class="form-control" />
+                                </div>
                                 <div class="col-md-3">
-                                    <input type="text" name="searchString" value="@searchString"
-                                           placeholder="Search by Product Name"
-                                           class="form-control" />
+                                    <select name="categoryId" class="form-select">
+                                        <option value="">All Categories</option>
+                                        @foreach (var cat in Model.Categories)
+                                        {
+                                            <option value="@cat.Id" selected="@(cat.Id.ToString() == Model.categoryId?.ToString())">@cat.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                                        <option value="name_asc" selected="@(Model.sortOrder == "name_asc")">Name A-Z</option>
+                                        <option value="name_desc" selected="@(Model.sortOrder == "name_desc")">Name Z-A</option>
+                                        <option value="price_asc" selected="@(Model.sortOrder == "price_asc")">Price: Low to High</option>
+                                        <option value="price_desc" selected="@(Model.sortOrder == "price_desc")">Price: High to Low</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary">Search</button>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="material-icons">filter_list</i> Apply
+                                    </button>
                                 </div>
                             </div>
                         </form>
-
-                        <!-- Product Table -->
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
+                        <!-- Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle table-fixed mb-0">
+                                <thead class="table-light">
                                     <tr>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Id)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Name)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Price)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Quantity)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Image)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Rate)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Description)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].CategoryId)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Product[0].Status)</th>
-                                        <th>Actions</th>
+                                        <th width="24%">Product Name</th>
+                                        <th width="12%">Price</th>
+                                        <th width="9%">Qty</th>
+                                        <th width="12%">Image</th>
+                                        <th width="16%">Category</th>
+                                        <th width="10%" id="colStatus">Status</th>
+                                        <th width="13%">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.Product)
                                     {
                                         <tr>
-                                            <td>@item.Id</td>
-                                            <td>@item.Name</td>
-                                            <td>@item.Price</td>
-                                            <td>@item.Quantity</td>
+                                            <td title="@item.Name"><strong>@item.Name</strong></td>
+                                            <td><span class="text-danger fw-bold">@item.Price vn₫</span></td>
                                             <td>
-                                                <img src="@item.Image" alt="Product Image" width="100" />
+                                                <span class="badge bg-@(item.Quantity > 0 ? "success" : "danger")">
+                                                    @item.Quantity
+                                                </span>
                                             </td>
-                                            <td>@item.Rate</td>
+                                            <td><img src="@item.Image" alt="@item.Name" class="img-thumbnail" /></td>
+                                            <td><small class="text-muted">@(item.Category?.Name ?? "—")</small></td>
+                                            <td id="colStatus">
+                                                <span class="badge @(item.Status == 1 ? "bg-success" : "bg-secondary")">
+                                                    @(item.Status == 1 ? "Show" : "Hide")
+                                                </span>
+                                            </td>
                                             <td>
-                                                @(item.Description?.Length > 40
-                                                                                            ? item.Description.Substring(0, 40) + "..."
-                                                                                            : item.Description)
-                                        </td>
-                                        <td>@item.CategoryId</td>
-                                        <td>@item.Status</td>
-                                        <td>
-                                            <a href="/Products/Edit?id=@item.Id" class="edit" data-toggle="tooltip" title="Edit">
-                                                <i class="material-icons">&#xE254;</i>
-                                            </a>
-                                            <a href="/Products/Delete?id=@item.Id" onclick="return confirmDelete()" class="delete" data-toggle="tooltip" title="Delete">
-                                                <i class="material-icons">&#xE872;</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                                                        }
+                                                <a href="/Products/Edit?id=@item.Id" class="action-btn" title="Edit">
+                                                    <i class="material-icons">edit</i>
+                                                </a>
+                                                <a href="/Products/Delete?id=@item.Id"
+                                                   onclick="return confirm('Delete product \" @item.Name\"?')"
+                                                   class="action-btn text-danger" title="Delete">
+                                                    <i class="material-icons">delete</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
-
                         <!-- Pagination -->
-                        <div class="clearfix d-flex justify-content-between align-items-center mt-3 px-3">
-                            <div>
-                                <small>
-                                    Showing <b>@((Model.page - 1) * Model.pageSize + 1)</b>
-                                    -
-                                    <b>@Math.Min(Model.page * Model.pageSize, Model.totalProducts)</b>
-                                    of <b>@Model.totalProducts</b> products
-                                </small>
-                            </div>
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap">
+                            <small class="text-muted">
+                                Showing
+                                <strong>@((Model.currentPage - 1) * IndexModel.pageSize + 1)</strong> -
+                                <strong>@Math.Min(Model.currentPage * IndexModel.pageSize, Model.totalProducts)</strong>
+                                of <strong>@Model.totalProducts</strong> products
+                            </small>
 
-                            <ul class="pagination mb-0">
-                                @{
-                                    var page = Model.page;
-                                    var max = Model.pageLength;
-                                    var next = page + 1;
-                                    var pre = page - 1;
-                                }
-
-                                @if (page > 1)
-                                {
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=@pre&searchString=@Model.searchString">Previous</a>
-                                    </li>
-                                }
-
-                                @for (int i = 1; i <= max; i++)
-                                {
-                                    if (page == i)
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    <!-- Previous -->
+                                    @if (Model.currentPage > 1)
                                     {
-                                        <li class="page-item active">
-                                            <a class="page-link" href="?page=@i&searchString=@Model.searchString">@i</a>
+                                        <li class="page-item">
+                                            <a class="page-link" href="@Model.PaginateUrl(Model.currentPage - 1)">Previous</a>
                                         </li>
                                     }
                                     else
                                     {
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page=@i&searchString=@Model.searchString">@i</a>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Previous</span>
                                         </li>
                                     }
-                                }
 
-                                @if (page < max)
-                                {
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=@next&searchString=@Model.searchString">Next</a>
-                                    </li>
-                                }
-                            </ul>
+                                    <!-- Page Numbers -->
+                                    @{
+                                        int start = Math.Max(1, Model.currentPage - 2);
+                                        int end = Math.Min(Model.pageLength, Model.currentPage + 2);
+
+                                        // Hiển thị trang 1 nếu đang ở trang xa
+                                        if (start > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Model.PaginateUrl(1)">1</a>
+                                            </li>
+                                            if (start > 2)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            }
+                                        }
+
+                                        for (int i = start; i <= end; i++)
+                                        {
+                                            <li class="page-item @(Model.currentPage == i ? "active" : "")">
+                                                <a class="page-link" href="@Model.PaginateUrl(i)">@i</a>
+                                            </li>
+                                        }
+
+                                        // Hiển thị trang cuối nếu cần
+                                        if (end < Model.pageLength)
+                                        {
+                                            if (end < Model.pageLength - 1)
+                                            {
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            }
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Model.PaginateUrl(Model.pageLength)">@Model.pageLength</a>
+                                            </li>
+                                        }
+                                    }
+
+                                    <!-- Next -->
+                                    @if (Model.currentPage < Model.pageLength)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@Model.PaginateUrl(Model.currentPage + 1)">Next</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Next</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </nav>
                         </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
-
+<!-- SignalR + Toastr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
-
-<script type="text/javascript">
-    function confirmDelete() {
-        return confirm('Are you sure you want to delete this product?');
-    }
-
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/productHub")
-        .build();
-
-    connection.on("ReceiveProductUpdate", function (productId, action) {
-        alert("Product " + action + ": " + productId);
-        location.reload();
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    // Toggle Status
+    document.getElementById('toggleStatus')?.addEventListener('click', function () {
+        document.querySelectorAll('#colStatus').forEach(c => {
+            c.style.display = c.style.display === 'none' ? '' : 'none';
+        });
+        this.innerHTML = this.innerHTML.includes('visibility')
+            ? '<i class="material-icons">visibility_off</i> Status'
+            : '<i class="material-icons">visibility</i> Status';
     });
-
-    connection.start().catch(err => console.error(err.toString()));
+    // SignalR
+    const conn = new signalR.HubConnectionBuilder().withUrl("/productHub").build();
+    conn.on("ReceiveProductUpdate", (id, action) => {
+        const verb = action === 'created' ? 'added' : action === 'updated' ? 'updated' : 'deleted';
+        toastr.info(`Product ${verb}: ${id}`);
+        setTimeout(() => location.reload(), 1200);
+    });
+    conn.start().catch(err => console.error(err));
+    toastr.options = { closeButton:true, progressBar:true, positionClass:"toast-top-right", timeOut:3000 };
 </script>

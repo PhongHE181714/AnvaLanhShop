@@ -40,6 +40,7 @@ namespace GreenShop.Pages.Products
                 return OnGet();
             }
             Product.Id = Guid.NewGuid();
+            Product.Status = 1;
             _context.Products.Add(Product);
             await _context.SaveChangesAsync();
             await _hubContext.Clients.All.SendAsync("ReceiveStudentUpdate", Product.Id, "Created");
