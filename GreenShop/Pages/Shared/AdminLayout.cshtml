@@ -23,18 +23,34 @@
 <!-- SignalR Setup -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
 <script>
-          if (typeof window.connection === "undefined") {
-        window.connection = new signalR.HubConnectionBuilder()
+     if (typeof window.categoryConnection === "undefined") {
+        window.categoryConnection = new signalR.HubConnectionBuilder()
             .withUrl("/categoryHub")
             .build();
 
-        window.connection.on("ReceiveCategoryUpdate", (id, action) => {
+        window.categoryConnection.on("ReceiveCategoryUpdate", (id, action) => {
+            console.log("Category Update:", id, action);
             if (window.location.pathname.includes("/Categories")) {
                 location.reload();
             }
         });
 
-        window.connection.start();
+        window.categoryConnection.start().catch(err => console.error(err.toString()));
+    }
+
+    if (typeof window.productConnection === "undefined") {
+        window.productConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/productHub")
+            .build();
+
+        window.productConnection.on("ReceiveProductUpdate", (id, action) => {
+            console.log("Product Update:", id, action);
+            if (window.location.pathname.includes("/Products")) {
+                location.reload();
+            }
+        });
+
+        window.productConnection.start().catch(err => console.error(err.toString()));
     }
 
 

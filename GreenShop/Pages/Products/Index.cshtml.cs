@@ -52,8 +52,10 @@ namespace GreenShop.Pages.Products
             return $"?{string.Join("&", parts)}";
         }
 
+
         public async Task OnGetAsync()
         {
+
             // Lấy filter từ query string
             searchString = Request.Query["searchString"];
             sortOrder = Request.Query["sortOrder"];

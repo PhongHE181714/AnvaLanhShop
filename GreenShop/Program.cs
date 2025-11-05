@@ -79,6 +79,8 @@ namespace GreenShop
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseMiddleware<AdminCheckMiddleware>();
+
 
             app.UseAuthentication();
             app.UseAuthorization();
