@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Project_PRN221.Pages.Dashboard
+namespace GreenShop.Pages.Dashboard
 {
     public class IndexModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public IndexModel(Project_PRN221.Models.GreenShopContext context)
+        public IndexModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

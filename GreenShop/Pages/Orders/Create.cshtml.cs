@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Orders
+namespace GreenShop.Pages.Orders
 {
     public class CreateModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public CreateModel(Project_PRN221.Models.GreenShopContext context)
+        public CreateModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }
@@ -30,8 +30,8 @@ namespace Project_PRN221.Pages.Orders
             return Page();
         }
         public string userId;
-        public List<Project_PRN221.Models.User> user;
-        public List<Project_PRN221.Models.ShipmentDetail> shipmentDetails;
+        public List<GreenShop.Models.User> user;
+        public List<GreenShop.Models.ShipmentDetail> shipmentDetails;
 
         [BindProperty]
         public Order Order { get; set; } = default!;

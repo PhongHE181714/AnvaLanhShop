@@ -5,39 +5,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Categories
+namespace GreenShop.Pages.Categories
 {
     public class IndexModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShopContext _context;
 
-        public IndexModel(Project_PRN221.Models.GreenShopContext context)
+        public IndexModel(GreenShopContext context)
         {
             _context = context;
         }
 
-        public IList<Models.Category> Category { get; set; } = default!;
-        public int pageLength { get; set; }
-        public int pageSize { get; set; }
-        public int? page { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? Pag)
+        public IList<Category> Category { get; set; } = default!;
+
+        public async Task<IActionResult> OnGetAsync()
         {
-            if (_context.Categories != null)
-            {
-                Category = await _context.Categories.ToListAsync();
-            }
-            if (Pag == null)
-            {
-                Pag = 1;
-            }
-            int pageSize = 3;
-            pageLength = (Category.Count - 1) / pageSize + 1;
-            Category = Category.Skip((int)((Pag - 1) * pageSize)).Take(pageSize).ToList();
-            /* ViewBag.toDate = toDate;
-             ViewBag.fromDate = fromDate;*/
-            this.page = Pag;
+            if (_context.Categories == null)
+                return NotFound();
+
+            // ✅ Lấy toàn bộ danh sách category, sắp xếp theo tên (nếu muốn)
+            Category = await _context.Categories
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
             return Page();
         }
     }

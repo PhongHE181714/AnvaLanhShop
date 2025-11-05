@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using RestSharp;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Project_PRN221.Pages.Shop
+namespace GreenShop.Pages.Shop
 {
     public class PaymentModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public PaymentModel(Project_PRN221.Models.GreenShopContext context)
+        public PaymentModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

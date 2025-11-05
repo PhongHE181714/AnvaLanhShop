@@ -25,6 +25,7 @@ public partial class Product
 
     public int Status { get; set; }
 
+
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();

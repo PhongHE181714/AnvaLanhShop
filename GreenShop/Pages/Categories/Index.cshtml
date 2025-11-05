@@ -1,109 +1,110 @@
 ﻿@page
-@model Project_PRN221.Pages.Categories.IndexModel
-
+@model GreenShop.Pages.Categories.IndexModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Category Management";
     Layout = "~/Pages/Shared/AdminLayout.cshtml";
 }
+
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        .table-fixed {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+            .table-fixed th, .table-fixed td {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+        .action-btn {
+            font-size: 1.3rem;
+            margin: 0 6px;
+            color: #6c757d;
+            transition: color 0.2s;
+        }
+
+            .action-btn:hover {
+                color: #0d6efd;
+            }
+
+        .status-badge {
+            font-size: 0.85rem;
+            padding: 0.35em 0.65em;
+        }
+
+        #colStatus {
+            transition: all .3s ease;
+        }
+    </style>
 </head>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
-                    <div class="card-header pb-0">
-                        <h6>Category table</h6>
-                        <a asp-page="Create" class="btn btn-primary">Create</a>
+                    <!-- Header -->
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Category Management</h6>
+                        <div>
+                            <button id="toggleStatus" class="btn btn-outline-secondary btn-sm me-2">
+                                <i class="material-icons">visibility</i> Status
+                            </button>
+                            <a asp-page="Create" class="btn btn-success btn-sm">
+                                <i class="material-icons">add</i> Create New
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
+                    <div class="card-body px-4 pt-3 pb-2">
+                        <!-- Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle table-fixed mb-0">
+                                <thead class="table-light">
                                     <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Category Id
-                                        </th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Name
-                                        </th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Status
-                                        </th>
-
+                                        <th width="15%">Category ID</th>
+                                        <th width="45%">Name</th>
+                                        <th width="15%" id="colStatus">Status</th>
+                                        <th width="25%">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.Category)
                                     {
                                         <tr>
-                                            <td class="text-secondary text-xs font-weight-bold">
-                                                @Html.DisplayFor(modelItem => item.Id)
+                                            <td><strong>#@item.Id</strong></td>
+                                            <td title="@item.Name">@item.Name</td>
+                                            <td id="colStatus">
+                                                <span class="badge status-badge @(item.Status == 1 ? "bg-success" : "bg-secondary")">
+                                                    @(item.Status == 1 ? "Active" : "Inactive")
+                                                </span>
                                             </td>
-                                            <td class="text-secondary text-xs font-weight-bold">
-                                                @Html.DisplayFor(modelItem => item.Name)
-                                            </td>
-
-
                                             <td>
-                                                @if (item.Status == 1)
-                                                {
-                                                    <span class="badge badge-sm bg-gradient-success">Active</span>
-                                                }
-                                                else if (item.Status == 0)
-                                                {
-                                                    <span class="badge badge-sm bg-gradient-secondary">InActive</span>
-                                                }
-                                            </td>
-                                            <td class="text-secondary text-xs font-weight-bold">
-                                                <a href="Categories/Delete?id=@item.Id" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                                                <a href="Categories/Edit?id=@item.Id" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Update">&#xE254;</i></a>
-
-
+                                                <a href="@Url.Page("Edit", new { id = item.Id })"
+                                                   class="action-btn" title="Edit">
+                                                    <i class="material-icons">edit</i>
+                                                </a>
+                                                <a href="@Url.Page("Delete", new { id = item.Id })"
+                                                   onclick="return confirm('Delete category \" @item.Name\"?')"
+                                                   class="action-btn text-danger" title="Delete">
+                                                    <i class="material-icons">delete</i>
+                                                </a>
                                             </td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
-                        <div class="clearfix" style="display:flex;align-items:flex-end;d">
-                            @{
-                                var max = Model.pageLength;
-                                var page = Model.page;
-                                var next = page + 1;
-                                var pre = page - 1;
 
-                            }
-
-                            <ul class="pagination">
-                                @if (page > 1)
-                                {
-                                    <li class="page-item"><a href="?Pag=@pre" class="page-link">Previous</a></li>
-
-                                }
-
-                                @for (int i = 1; i <= max; i++)
-                                {
-                                    @if (page == i)
-                                    {
-                                        <li class="page-item active"><a href="?Pag=@i" class="page-link">@i</a></li>
-                                    }
-                                    else
-
-                                    {
-                                        <li class="page-item"><a href="?Pag=@i" class="page-link">@i</a></li>
-                                    }
-
-                                }
-                                @if (page < max)
-                                {
-                                    <li class="page-item "><a href="?Pag=@next" class="page-link">Next</a></li>
-
-                                }
-
-                            </ul>
+                        <!-- Hiển thị tổng số -->
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                Total: <strong>@Model.Category.Count()</strong> categories
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -111,21 +112,24 @@
         </div>
     </div>
 </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
 
-<script type="text/javascript">
-    
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/categoryHub")
-        .build();
-
-    connection.on("ReceiveCategoryUpdate", function (categoryId, action) {
-        alert("Category " + action + ": " + categoryId);
-        // Thực hiện hành động cụ thể, ví dụ như cập nhật danh sách sinh viên
-        location.reload();
+<!-- SignalR + Toastr -->
+<!-- Toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    // Toggle Status Column
+    document.getElementById('toggleStatus')?.addEventListener('click', function () {
+        document.querySelectorAll('#colStatus').forEach(el => {
+            el.style.display = el.style.display === 'none' ? '' : 'none';
+        });
+        const icon = this.querySelector('i');
+        icon.textContent = icon.textContent === 'visibility' ? 'visibility_off' : 'visibility';
     });
 
-    connection.start().catch(function (err) {
-        return console.error(err.toString());
-    });
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: "toast-top-right",
+        timeOut: 3000
+    };
 </script>

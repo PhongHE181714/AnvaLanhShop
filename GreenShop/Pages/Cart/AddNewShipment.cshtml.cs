@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Project_PRN221.Pages.Cart
+namespace GreenShop.Pages.Cart
 {
     public class AddNewShipmentModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public AddNewShipmentModel(Project_PRN221.Models.GreenShopContext context)
+        public AddNewShipmentModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

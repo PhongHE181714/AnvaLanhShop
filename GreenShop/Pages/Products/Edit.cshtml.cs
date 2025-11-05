@@ -28,7 +28,7 @@ namespace GreenShop.Pages.Products
         [BindProperty]
         public Product Product { get; set; } = default!;
 
-        // SelectList để dùng trong Razor <select asp-items="Model.CategoryList" />
+        
         public SelectList CategoryList { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
@@ -45,7 +45,7 @@ namespace GreenShop.Pages.Products
             }
             Product = product;
 
-            // Load danh sách category (Id là value, Name là text), và chọn giá trị hiện tại
+           
             var categories = await _context.Categories
                 .OrderBy(c => c.Name)
                 .ToListAsync();

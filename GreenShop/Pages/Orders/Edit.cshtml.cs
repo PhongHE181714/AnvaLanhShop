@@ -6,21 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Orders
+namespace GreenShop.Pages.Orders
 {
     public class EditModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public EditModel(Project_PRN221.Models.GreenShopContext context)
+        public EditModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }
         public string userId;
-        public List<Project_PRN221.Models.User> user;
-        public List<Project_PRN221.Models.ShipmentDetail> shipmentDetails;
+        public List<GreenShop.Models.User> user;
+        public List<GreenShop.Models.ShipmentDetail> shipmentDetails;
         [BindProperty]
         public Order Order { get; set; } = default!;
 

@@ -10,12 +10,12 @@ namespace Project_PRN222.Pages.User
     {
 
 
-        private readonly Project_PRN221.Models.GreenShopContext _context;
-        public ChangePasswordModel(Project_PRN221.Models.GreenShopContext context)
+        private readonly GreenShop.Models.GreenShopContext _context;
+        public ChangePasswordModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }
-        public Project_PRN221.Models.User User { get; set; }
+        public GreenShop.Models.User User { get; set; }
 
         public  IActionResult OnGet()
         {

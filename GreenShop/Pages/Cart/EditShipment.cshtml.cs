@@ -2,17 +2,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 
-namespace Project_PRN221.Pages.Cart
+namespace GreenShop.Pages.Cart
 {
     public class EditShipmentModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public EditShipmentModel(Project_PRN221.Models.GreenShopContext context)
+        public EditShipmentModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

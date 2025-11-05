@@ -1,49 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Hubs;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Categories
+namespace GreenShop.Pages.Categories
 {
     public class DeleteModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShopContext _context;
 
-        private readonly IHubContext<CategoryHubs> _hubContext;
-
-        public DeleteModel(GreenShopContext context, IHubContext<CategoryHubs> hubContext)
+        public DeleteModel(GreenShopContext context)
         {
-            this._context = context;
-            this._hubContext = hubContext;
+            _context = context;
         }
 
         [BindProperty]
-      public Models.Category Category { get; set; } = default!;
+        public Category Category { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            if (id == null || _context.Categories == null)
-            {
-                return NotFound();
-            }
-            var category = await _context.Categories.FindAsync(id);
+            if (id == null) return NotFound();
 
-            if (category != null)
+            Category = await _context.Categories.FindAsync(id);
+            if (Category == null) return NotFound();
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (Category == null) return BadRequest();
+
+            var category = await _context.Categories.FindAsync(Category.Id);
+            if (category == null) return NotFound();
+
+            // Kiểm tra còn sản phẩm thuộc category
+            bool hasProducts = _context.Products.Any(p => p.CategoryId == category.Id);
+            if (hasProducts)
             {
-                Category = category;
-                _context.Categories.Remove(Category);
-                await _context.SaveChangesAsync();
+                return StatusCode(409, new { message = "Danh mục này vẫn còn sản phẩm, vui lòng xóa hoặc chuyển sản phẩm sang danh mục khác trước khi xóa." });
             }
-            await _hubContext.Clients.All.SendAsync("ReceiveCategoryUpdate", Category.Id, "Deleted");
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            // Nếu request Ajax → trả OK
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return new OkResult();
 
             return RedirectToPage("./Index");
-
         }
     }
 }

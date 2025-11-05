@@ -1,4 +1,4 @@
-﻿namespace Project_PRN221.Models
+﻿namespace GreenShop.Models
 {
     public class Datum
     {

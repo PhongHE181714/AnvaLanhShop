@@ -1,55 +1,87 @@
 ﻿@page
-@model Project_PRN221.Pages.Categories.EditModel
-
+@model GreenShop.Pages.Categories.EditModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Category";
     Layout = "~/Pages/Shared/AdminLayout.cshtml";
-
 }
 
-<h1>Edit</h1>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="d-flex align-items-center">
+                            <h6 class="mb-0">Edit Category</h6>
+                            <a asp-page="./Index" class="btn btn-link ms-auto">
+                                <i class="material-icons"></i> Back to List
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body px-4 pt-4">
+                        <form method="post">
+                            <input type="hidden" asp-for="Category.Id" />
 
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Category.Id" />
-            <div class="form-group">
-                <label asp-for="Category.Name" class="control-label"></label>
-                <input asp-for="Category.Name" class="form-control" />
-                <span asp-validation-for="Category.Name" class="text-danger"></span>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="Category.Name" class="form-label fw-bold"></label>
+                                        <input asp-for="Category.Name" class="form-control form-control-lg" placeholder="Enter category name" />
+                                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="Category.Status" class="form-label fw-bold">Status</label>
+                                        <select asp-for="Category.Status" class="form-select form-select-lg">
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                        <span asp-validation-for="Category.Status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="material-icons">save</i> 
+                                </button>
+                                <a asp-page="./Index" class="btn btn-secondary btn-lg">
+                                    <i class="material-icons">cancel</i> 
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Category.Status" class="control-label"></label>
-                <input asp-for="Category.Status" class="form-control" />
-                <span asp-validation-for="Category.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+</main>
 
-<script type="text/javascript">
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault(); // ❌ chặn reload form mặc định
 
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/categoryHub")
-        .build();
+        const form = this;
+        const formData = new FormData(form);
 
-    connection.on("ReceiveCategoryUpdate", function (categoryId, action) {
-        alert("Successfully edit " + action + ": " + categoryId);
-        // Thực hiện hành động cụ thể, ví dụ như cập nhật danh sách sinh viên
-    });
-
-    connection.start().catch(function (err) {
-        return console.error(err.toString());
+        fetch(window.location.pathname, {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("✅ Category updated successfully");
+                // ✅ Sau khi cập nhật thành công → quay lại trang Index
+                window.location.href = "/Categories";
+            } else {
+                console.error("❌ Failed to update category");
+                alert("Error: Failed to update category");
+            }
+        })
+        .catch(err => {
+            console.error("⚠️ AJAX error:", err);
+            alert("An unexpected error occurred.");
+        });
     });
 </script>
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-

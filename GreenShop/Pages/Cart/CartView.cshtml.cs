@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using System.ComponentModel.Design;
 using System.IdentityModel.Tokens.Jwt;
-namespace Project_PRN221.Pages.Cart
+namespace GreenShop.Pages.Cart
 {
     public class CartViewModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public CartViewModel(Project_PRN221.Models.GreenShopContext context)
+        public CartViewModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

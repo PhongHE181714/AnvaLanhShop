@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using static NuGet.Packaging.PackagingConstants;
 
-namespace Project_PRN221.Pages.Orders
+namespace GreenShop.Pages.Orders
 {
     public class IndexModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public IndexModel(Project_PRN221.Models.GreenShopContext context)
+        public IndexModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

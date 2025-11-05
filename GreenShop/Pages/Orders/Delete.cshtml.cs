@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Orders
+namespace GreenShop.Pages.Orders
 {
     public class DeleteModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShop.Models.GreenShopContext _context;
 
-        public DeleteModel(Project_PRN221.Models.GreenShopContext context)
+        public DeleteModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }

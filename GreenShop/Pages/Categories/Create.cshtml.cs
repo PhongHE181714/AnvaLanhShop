@@ -1,48 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
-using Project_PRN221.Hubs;
-using Project_PRN221.Models;
+using GreenShop.Hubs;
+using GreenShop.Models;
 
-namespace Project_PRN221.Pages.Categories
+namespace GreenShop.Pages.Categories
 {
     public class CreateModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
+        private readonly GreenShopContext _context;
         private readonly IHubContext<CategoryHubs> _hubContext;
 
         public CreateModel(GreenShopContext context, IHubContext<CategoryHubs> hubContext)
         {
-            this._context = context;
-            this._hubContext = hubContext;
-        }
-
-        public IActionResult OnGet()
-        {
-            return Page();
+            _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
-        public Models.Category Category { get; set; } = default!;
-        
+        public Category Category { get; set; } = new Category();
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        public IActionResult OnGet() => Page();
+
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Categories == null || Category == null)
-            {
+            if (!ModelState.IsValid)
                 return Page();
+
+            if (string.IsNullOrWhiteSpace(Category.Name))
+            {
+                ModelState.AddModelError("Category.Name", "Name is required.");
+                return BadRequest(new { message = "Name is required." });
             }
+
+            bool exists = _context.Categories
+                .Any(c => c.Name.ToLower() == Category.Name.Trim().ToLower());
+
+            if (exists)
+            {
+                // ❌ Trùng tên → trả 409 Conflict để JS hiển thị lỗi
+                return StatusCode(409, new { message = "Category name already exists." });
+            }
+
             Category.Id = Guid.NewGuid();
+            Category.Name = Category.Name.Trim();
+            Category.Status = 1;
+
             _context.Categories.Add(Category);
             await _context.SaveChangesAsync();
-            await _hubContext.Clients.All.SendAsync("ReceiveCategoryUpdate", Category.Id, "Created");
-            return RedirectToPage("./Index");
+
+            try
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveCategoryUpdate", Category.Id, "created");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ SignalR send create failed: {ex.Message}");
+            }
+
+            // ✅ Nếu là Ajax request → trả về OK
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return new OkResult();
+            }
+
+            // ✅ Nếu là request thường → redirect như cũ
+            return RedirectToPage("/Categories/Index");
         }
+
+
     }
 }

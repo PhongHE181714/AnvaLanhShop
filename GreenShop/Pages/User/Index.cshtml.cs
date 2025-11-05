@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Project_PRN221.Models;
+using GreenShop.Models;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Project_PRN221.Pages.User
+namespace GreenShop.Pages.User
 {
     public class IndexModel : PageModel
     {
-        private readonly Project_PRN221.Models.GreenShopContext _context;
-        public IndexModel(Project_PRN221.Models.GreenShopContext context)
+        private readonly GreenShop.Models.GreenShopContext _context;
+        public IndexModel(GreenShop.Models.GreenShopContext context)
         {
             _context = context;
         }
 
-        public Project_PRN221.Models.User User { get; set; }
+        public GreenShop.Models.User User { get; set; }
 
         public IActionResult OnGet()
         {
