@@ -56,7 +56,7 @@ namespace GreenShop.Pages.Products
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠️ SignalR send create failed: {ex.Message}");
+                Console.WriteLine($"SignalR send create failed: {ex.Message}");
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")

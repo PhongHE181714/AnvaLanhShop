@@ -22,9 +22,9 @@ namespace GreenShop.Pages.Products
         // PAGINATION
         public const int pageSize = 12;
         public int totalProducts { get; set; }
-        public int pageLength => (int)Math.Ceiling(totalProducts / (double)pageSize);
 
-        // Lấy current page từ query string, mặc định = 1
+        public int[] count { get; set; }
+        public int pageLength => (int)Math.Ceiling(totalProducts / (double)pageSize);
         public int currentPage
         {
             get
@@ -35,7 +35,6 @@ namespace GreenShop.Pages.Products
             }
         }
 
-        // URL HELPER – giữ filter khi phân trang
         public string PaginateUrl(int p)
         {
             var parts = new List<string> { $"page={p}" };
@@ -59,7 +58,7 @@ namespace GreenShop.Pages.Products
             // Lấy filter từ query string
             searchString = Request.Query["searchString"];
             sortOrder = Request.Query["sortOrder"];
-
+            
             if (Guid.TryParse(Request.Query["categoryId"], out var catId) && catId != Guid.Empty)
                 categoryId = catId;
 
@@ -67,12 +66,13 @@ namespace GreenShop.Pages.Products
             Categories = await _context.Categories
                 .OrderBy(c => c.Name)
                 .ToListAsync();
-
+          
             // Query cơ bản
-            IQueryable<Product> query = _context.Products
+            IQueryable <Product> query = _context.Products
                 .Include(p => p.Category)
                 .AsQueryable();
 
+           
             // Tìm kiếm
             if (!string.IsNullOrWhiteSpace(searchString))
                 query = query.Where(p => p.Name.Contains(searchString));
@@ -89,6 +89,15 @@ namespace GreenShop.Pages.Products
                 "price_desc" => query.OrderByDescending(p => p.Price),
                 _ => query.OrderBy(p => p.Name)
             };
+
+            count = new int[Categories.Count];
+            int total = 0;
+            foreach (var category in Categories)
+            {
+
+                count[total] = await query.Where(p => p.CategoryId == category.Id).CountAsync();
+                total++;
+            }
 
             // Tổng sản phẩm
             totalProducts = await query.CountAsync();

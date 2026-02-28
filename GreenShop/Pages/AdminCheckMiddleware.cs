@@ -19,6 +19,13 @@ public class AdminCheckMiddleware
     {
         var path = context.Request.Path.Value;
 
+        // Block access to Blog
+        if (path.StartsWith("/Blog", StringComparison.OrdinalIgnoreCase))
+        {
+            context.Response.Redirect("/Shop");
+            return;
+        }
+
         // Chỉ check những url /Products/... hoặc /Categories/...
         if (path.StartsWith("/Products", StringComparison.OrdinalIgnoreCase) ||
             path.StartsWith("/Categories", StringComparison.OrdinalIgnoreCase) ||

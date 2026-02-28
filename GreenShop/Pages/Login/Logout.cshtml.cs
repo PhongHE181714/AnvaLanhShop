@@ -7,6 +7,7 @@ namespace GreenShop.Pages.Login
     {
         public void OnGet()
         {
+            TempData.Clear();
             Response.Cookies.Delete("AuthToken");
 			Response.Redirect("/Shop/Index");
         }

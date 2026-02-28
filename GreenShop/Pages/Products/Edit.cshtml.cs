@@ -48,13 +48,30 @@ namespace GreenShop.Pages.Products
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (Product.Price <= 0)
+                ModelState.AddModelError("Product.Price", "Price must be greater than 0");
+
+            if (Product.Quantity < 0)
+                ModelState.AddModelError("Product.Quantity", "Quantity cannot be negative");
+
+            if (string.IsNullOrWhiteSpace(Product.Name))
+                ModelState.AddModelError("Product.Name", "Product name is required");
+
+            bool nameExists = await _context.Products
+                .AnyAsync(p => p.Name.ToLower() == Product.Name.Trim().ToLower()
+                            && p.Id != Product.Id);
+
+            if (nameExists)
+                ModelState.AddModelError("Product.Name", "Product name already exists");
+
             if (!ModelState.IsValid)
-                return BadRequest(new { message = "Invalid input." });
+                return BadRequest(ModelState);
 
             var productInDb = await _context.Products.FindAsync(Product.Id);
-            if (productInDb == null) return NotFound();
+            if (productInDb == null)
+                return NotFound();
 
-            productInDb.Name = Product.Name;
+            productInDb.Name = Product.Name.Trim();
             productInDb.Price = Product.Price;
             productInDb.Quantity = Product.Quantity;
             productInDb.Image = Product.Image;
@@ -66,7 +83,8 @@ namespace GreenShop.Pages.Products
 
             try
             {
-                await _hubContext.Clients.All.SendAsync("ReceiveProductUpdate", Product.Id, "Updated");
+                await _hubContext.Clients.All
+                    .SendAsync("ReceiveProductUpdate", Product.Id, "Updated");
             }
             catch { }
 
@@ -75,5 +93,6 @@ namespace GreenShop.Pages.Products
 
             return RedirectToPage("./Index");
         }
+
     }
 }

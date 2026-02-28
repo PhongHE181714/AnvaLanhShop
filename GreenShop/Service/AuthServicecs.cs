@@ -93,6 +93,29 @@ namespace GreenShop.Service
 
 			return user;
 		}
+
+		public async Task<bool> IsEmailTaken(string email)
+		{
+			return await _context.Users.AnyAsync(u => u.Email == email);
+		}
+
+		public async Task<bool> IsUsernameTaken(string username)
+		{
+			return await _context.Users.AnyAsync(u => u.Username == username);
+		}
+
+		public bool ValidatePassword(string password)
+		{
+			if (string.IsNullOrEmpty(password) || password.Length < 8)
+				return false;
+
+			bool hasUpper = password.Any(char.IsUpper);
+			bool hasLower = password.Any(char.IsLower);
+			bool hasDigit = password.Any(char.IsDigit);
+			bool hasSpecial = password.Any(ch => !char.IsLetterOrDigit(ch));
+
+			return hasUpper && hasLower && hasDigit && hasSpecial;
+		}
 	}
 }
 

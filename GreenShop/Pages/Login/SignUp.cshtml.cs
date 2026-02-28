@@ -9,22 +9,56 @@ namespace GreenShop.Pages.Login
     {
 		private readonly GreenShopContext _context;
 		private readonly AuthServicecs _authService;
+		private readonly EmailService _emailService;
 
-		public SignUpModel(GreenShopContext context, AuthServicecs authService)
+		public SignUpModel(GreenShopContext context, AuthServicecs authService, EmailService emailService)
 		{
 			_context = context;
 			_authService = authService;
+			_emailService = emailService;
 		}
+
+		[TempData]
+		public string ErrorMessage { get; set; }
+
 		public void OnGet()
 		{
 		}
-		public async Task<IActionResult> OnPostAsync(string username, string email, string password)
-		{
-			GreenShop.Models.User user = await _authService.CreateNewUser2(email, username, password);
-			var token = await _authService.CreateToken(user);
-			Response.Cookies.Append("AuthToken", token);
-			return RedirectToPage("/Shop/Index");
-		}
 
+		public async Task<IActionResult> OnPostAsync(string username, string email)
+		{
+			if (await _authService.IsEmailTaken(email))
+			{
+				ErrorMessage = "Email is already registered.";
+				return Page();
+			}
+
+            if (await _authService.IsUsernameTaken(username))
+            {
+                ErrorMessage = "Username is already taken. Please choose another one.";
+                return Page();
+            }
+
+			// Generate verification code
+			string verificationCode = new Random().Next(100000, 999999).ToString();
+
+			// Send verification email
+			try
+			{
+				await _emailService.SendVerificationCodeEmailAsync(email, verificationCode);
+			}
+			catch (Exception ex)
+			{
+				ErrorMessage = $"Failed to send verification email: {ex.Message}. Make sure you use a Google App Password and correct SMTP settings in appsettings.json.";
+				return Page();
+			}
+
+			return RedirectToPage("/Login/Verify", new { 
+                email = email, 
+                username = username, 
+                code = verificationCode,
+                time = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()
+            });
+		}
 	}
 }

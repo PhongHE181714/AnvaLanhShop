@@ -23,26 +23,40 @@ namespace GreenShop.Pages.Login
 		{
 			return Page();
 		}
-		public async Task<IActionResult> OnPostAsync(string email, string password)
+		public async Task<IActionResult> OnPostAsync(string loginInput, string password, bool rememberMe)
 		{
+            if (string.IsNullOrEmpty(loginInput) || string.IsNullOrEmpty(password))
+            {
+                TempData["ErrorMessage"] = "Please enter both login and password.";
+                return Page();
+            }
 
-			email = email.Trim();
+			loginInput = loginInput.Trim();
 			password = password.Trim();
-			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            // Search by Email or Username
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginInput || u.Username == loginInput);
 			
-			if (user == null)
+			if (user == null || BCrypt.Net.BCrypt.Verify(password, user.Password) == false)
 			{
-				ModelState.AddModelError("LoginFailed", "Email or password is incorrect");
+				TempData["ErrorMessage"] = "Incorrect email/username or password.";
 				return Page();
 			}
-			if (BCrypt.Net.BCrypt.Verify(password, user.Password) == false)
-			{
-				ModelState.AddModelError("LoginFailed", "Email or password is incorrect");
-				return Page();
-			}
+
+            if (user.Status == 0)
+            {
+                TempData["ErrorMessage"] = "Your account is inactive. Please verify your email.";
+                return RedirectToPage("/Login/Verify", new { email = user.Email });
+            }
 
 			var token = await _authService.CreateToken(user);
-			Response.Cookies.Append("AuthToken", token);
+			
+			var cookieOptions = new CookieOptions();
+			if (rememberMe)
+			{
+				cookieOptions.Expires = DateTime.Now.AddDays(7);
+			}
+			Response.Cookies.Append("AuthToken", token, cookieOptions);
 
 			return RedirectToPage("/Shop/Index");
 		}

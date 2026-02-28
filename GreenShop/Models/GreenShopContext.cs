@@ -43,6 +43,8 @@ public partial class GreenShopContext : DbContext
 
     public virtual DbSet<Voucher> Vouchers { get; set; }
 
+    public DbSet<Tag> Tags { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var builder = new ConfigurationBuilder()
@@ -223,6 +225,12 @@ public partial class GreenShopContext : DbContext
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreateAt).HasColumnName("Create_at");
             entity.Property(e => e.ExpireAt).HasColumnName("Expire_at");
+        });
+
+        modelBuilder.Entity<Tag>(entity =>
+        {
+            entity.ToTable("Tag"); 
+           
         });
 
         OnModelCreatingPartial(modelBuilder);

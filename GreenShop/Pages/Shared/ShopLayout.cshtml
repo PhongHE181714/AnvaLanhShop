@@ -1,11 +1,16 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@using GreenShop.Models
+@using Microsoft.AspNetCore.Http
+@using System.IdentityModel.Tokens.Jwt
+@using System.Linq
+@using Microsoft.EntityFrameworkCore
+@inject GreenShopContext db
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>EcoNest - Group 2 Bông Tắm</title>
-	<link rel="icon" type="image/png" href="~/img/econest_finalllllll_png.png">
+	<title>An và Lành</title>
+	<link rel="icon" type="image/png" href="~/img/An và Lành_finalllllll_png.png">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
@@ -206,6 +211,14 @@
 		h5, h6 {
 			font-weight: bold;
 		}
+
+		#ftco-nav .navbar-nav {
+			width: 100%;
+		}
+
+	
+
+		
 	</style>
 </head>
 <body class="goto-here">
@@ -220,17 +233,55 @@
 		</div>
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+		@{
+			string username = null;
+			bool isAdmin = false;
+
+			var token = Context.Request.Cookies["AuthToken"];
+			if (!string.IsNullOrEmpty(token))
+			{
+				try
+				{
+					var handler = new JwtSecurityTokenHandler();
+					var jwtToken = handler.ReadJwtToken(token);
+					var idClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+
+					if (Guid.TryParse(idClaim, out Guid userId))
+					{
+						var user = await db.Users.Include(u => u.Role)
+						.FirstOrDefaultAsync(u => u.Id == userId);
+
+						if (user != null)
+						{
+							username = user.Username;
+							isAdmin = user.Role != null && user.Role.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase);
+						}
+
+					
+					}
+				}
+				catch (Exception ex)
+				{
+					<p style="color:red;">Error reading token: @ex.Message</p>
+				}
+			}
+			else
+			{
+				<p>No AuthToken cookie found.</p>
+			}
+		}
+
 		<div class="container">
 			<div class="d-flex align-items-center">
-				<img src="~/img/econest_finalllllll_png.png" alt="EcoNest Logo" style="height: 40px; width: auto;" class="mr-2">
-				<a class="navbar-brand" href="~/Shop">EcoNest</a>
+				<img src="~/img/617706698_122135536352988778_2957957538179603356_n.jpg" alt="An và Lành Logo" style="height: 100px; width: auto;" class="mr-2">
+				<a class="navbar-brand" href="~/Shop">An và Lành</a>
 			</div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="oi oi-menu"></span> Menu
 			</button>
 
-			<div class="collapse navbar-collapse" id="ftco-nav">
+			<div  class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item @(Context.Request.Path == "/Shop" ? "active" : "")">
 						<a href="~/Shop" class="nav-link">Trang Chủ</a>
@@ -249,14 +300,47 @@
 					</li>
 					@if (Context.Request.Cookies["AuthToken"] != null)
 					{
-						<li class="nav-item @(Context.Request.Path == "/Shop/OrderList" ? "active" : "")">
-							<a href="~/Shop/OrderList" class="nav-link">Đơn Hàng</a>
-						</li>
-						<li class="nav-item cta cta-colored @(Context.Request.Path == "/Cart/CartView" ? "active" : "")">
-							<a href="~/Cart/CartView" class="nav-link">
-								<span class="icon-shopping_cart"></span>[@Model.itemCart]
-							</a>
-						</li>
+						if (isAdmin)
+						{
+							<li class="nav-item @(Context.Request.Path == "/Dashboard" ? "active" : "")">
+								<a href="~/Dashboard" class="nav-link">Quản lý</a>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item cta cta-colored @(Context.Request.Path == "/Cart/CartView" ? "active" : "")">
+								<a href="~/Cart/CartView" class="nav-link">
+									<span class="icon-shopping_cart"></span>[@Model.itemCart]
+								</a>
+							</li>
+						}
+
+						@if (!string.IsNullOrEmpty(username))
+						{
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #8dc63f; font-weight: bold;">
+									@username
+								</a>
+								<div class="dropdown-menu" aria-labelledby="userDropdown">
+									@if (isAdmin)
+									{
+										<a class="dropdown-item" href="~/Admin/Dashboard">Quản lý</a>
+									}
+									else
+									{
+										<a class="dropdown-item" href="~/Shop/OrderList">Đơn Hàng</a>
+									}
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="~/Login/Logout">Đăng Xuất</a>
+								</div>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item @(Context.Request.Path == "/Login/Logout" ? "active" : "")">
+								<a href="~/Login/Logout" class="nav-link">Đăng Xuất</a>
+							</li>
+						}
 					}
 					else
 					{
@@ -265,26 +349,11 @@
 								<span class="icon-shopping_cart"></span>
 							</a>
 						</li>
+						<li class="nav-item cta cta-colored @(Context.Request.Path == "/Login" ? "active" : "")">
+							<a class="dropdown-item @(Context.Request.Path == "/Login" ? "active" : "")" href="~/Login">Đăng Nhập</a>
+						</li>
 					}
 				</ul>
-
-				@if (Context.Request.Cookies["AuthToken"] == null)
-				{
-					<ul class="navbar-nav" style="margin-left: 50px;">
-						<a class="dropdown-item @(Context.Request.Path == "/Login" ? "active" : "")" href="~/Login">Đăng Nhập</a>
-					</ul>
-				}
-				else
-				{
-					<ul class="navbar-nav" style="margin-left: 50px;">
-						<img src="~/img/team-1.jpg" alt="Avatar" class="rounded-circle"
-							 style="cursor: pointer;" onclick="window.location.href='https://localhost:7147/User'">
-
-						<li class="nav-item @(Context.Request.Path == "/Login/Logout" ? "active" : "")">
-							<a href="~/Login/Logout" class="nav-link">Đăng Xuất</a>
-						</li>
-					</ul>
-				}
 			</div>
 		</div>
 	</nav>
@@ -315,7 +384,7 @@
 			<div class="row mb-5">
 				<div class="col-md">
 					<div class="ftco-footer-widget mb-4">
-						<h2 class="ftco-heading-2">EcoNest</h2>
+						<h2 class="ftco-heading-2">An và Lành</h2>
 						<p>Bông tắm Xơ Mướp 100% từ thiên nhiên - Sự lựa chọn hoàn hảo cho làn da và môi trường</p>
 					</div>
 				</div>
@@ -353,8 +422,8 @@
 						<div class="block-23 mb-3">
 							<ul>
 								<li><a href="#"><span class="icon icon-phone"></span><span class="text">(+84) 978 468 063</span></a></li>
-								<li><a href="#"><span class="icon icon-envelope"></span><span class="text">econest@gmail.com</span></a></li>
-								<li><a href="https://www.facebook.com/profile.php?id=100017097183407"><span class="icon icon-facebook"></span><span class="text">EcoNest</span></a></li>
+								<li><a href="#"><span class="icon icon-envelope"></span><span class="text">An và Lành@gmail.com</span></a></li>
+								<li><a href="https://www.facebook.com/profile.php?id=100017097183407"><span class="icon icon-facebook"></span><span class="text">An và Lành</span></a></li>
 							</ul>
 						</div>
 					</div>

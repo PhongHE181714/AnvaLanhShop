@@ -49,7 +49,7 @@
             });
 
             if (response.ok) {
-                alert("✅ Product deleted (soft delete) successfully!");
+                alert(" Product deleted (soft delete) successfully!");
                 window.location.href = "/Products";
             } else if (response.status === 400 || response.status === 409) {
                 const result = await response.json().catch(() => ({}));

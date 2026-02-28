@@ -1,0 +1,98 @@
+﻿@page
+@model GreenShop.Pages.Shop.OrderListModel
+@{
+    ViewData["Title"] = "OrderViewModelList";
+    Layout = "~/Pages/Shared/ShopLayout.cshtml";
+}
+<body>
+    <main class="main-content position-relative">
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0">
+                            <h6>Danh sách đơn hàng</h6>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 150px;">
+                                                @Html.DisplayNameFor(model => model.Order[0].Id)
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 200px;">
+                                                Tên Khách Hàng
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 200px;">
+                                                Địa Chỉ
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 150px;">
+                                                Ngày Tạo
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 150px;">
+                                                Tổng Đơn Hàng
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 200px;">
+                                                Phương Thức Thanh Toán
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 100px;">
+                                                Trạng Thái
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Order)
+                                        {
+                                            <tr>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.User.Username)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.ShipmentDetails.Address)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.CreateAt)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.TotalPrice)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @{
+                                                        string note = item.Note; // Giả sử item.Note là kiểu string
+                                                        var noteParts = note.Split(new[] { "Type:" }, StringSplitOptions.None);
+                                                        var displayNote = noteParts.Length > 1 ? noteParts[1].Trim() : note;
+                                                    }
+                                                    @displayNote
+                                                </td>
+
+                                                <td class="align-middle">
+                                                    <a href="~/Shop/OrderProgress?id=@item.Id" class="nav-link"><span class="icon-settings"></span></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                @if (Model.Order.Count == 0)
+                                {
+                                    <div style="text-align: center;">
+                                        <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f4.png" alt="No Order Found" class="img-fluid" style="max-width: 200px; display: block; margin: auto;">
+                                        <label class="mr-2" style="display: block;">Bạn không có đơn hàng nào!</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>

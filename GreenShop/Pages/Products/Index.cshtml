@@ -68,10 +68,15 @@
                                 </div>
                                 <div class="col-md-3">
                                     <select name="categoryId" class="form-select">
-                                        <option value="">All Categories</option>
+                                        <option value="">All Categories (@Model.totalProducts)</option>
+                                        @{
+                                            int a = 0;
+                                        }
                                         @foreach (var cat in Model.Categories)
                                         {
-                                            <option value="@cat.Id" selected="@(cat.Id.ToString() == Model.categoryId?.ToString())">@cat.Name</option>
+                                            
+                                            <option value="@cat.Id" selected="@(cat.Id.ToString() == Model.categoryId?.ToString())">@cat.Name (@Model.count[a])</option>
+                                            a++;
                                         }
                                     </select>
                                 </div>
@@ -105,6 +110,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
                                     @foreach (var item in Model.Product)
                                     {
                                         <tr>
@@ -137,7 +143,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Pagination -->
                         <!-- Pagination -->
                         <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap">
                             <small class="text-muted">

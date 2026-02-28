@@ -48,15 +48,13 @@ namespace GreenShop.Pages.Categories
             existing.Name = Category.Name;
             existing.Status = Category.Status;
 
-            // Lấy danh sách product của Category
+          
             var products = _context.Products.Where(p => p.CategoryId == Category.Id).ToList();
 
-            // Nếu tắt Category → ẩn tất cả product
             if (oldStatus == 1 && Category.Status == 0)
             {
                 foreach (var p in products)
                 {
-                    // Chỉ ẩn những product đang active
                     if (p.Status == 1)
                         p.Status = 0;
                 }
@@ -74,13 +72,11 @@ namespace GreenShop.Pages.Categories
                 }
             }
 
-            // Nếu bật Category → chỉ hiện những product trước đó đang active
+            
             if (oldStatus == 0 && Category.Status == 1)
             {
                 foreach (var p in products)
                 {
-                    // Chỉ bật lại những product đang 0 vì Category trước đó bị tắt
-                    // Nếu product đã tắt từ trước (Status == 0) → giữ nguyên
                     if (p.Status == 0)
                         p.Status = 1;
                 }
@@ -100,7 +96,6 @@ namespace GreenShop.Pages.Categories
 
             await _context.SaveChangesAsync();
 
-            // SignalR thông báo Category cập nhật
             try
             {
                 await _hubContext.Clients.All.SendAsync("ReceiveCategoryUpdate",

@@ -1,0 +1,166 @@
+﻿@page
+@model GreenShop.Pages.Shop.OrderProgressModel
+
+@{
+    ViewBag.Title = "Order Page";
+    Layout = "~/Pages/Shared/ShopLayout.cshtml";
+}
+<head>
+
+    <link href="~/css/orderProgress.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        .iconOrder {
+            width: 60px; /* Thay đổi kích thước hình ảnh nếu cần */
+            height: auto;
+        }
+
+        .icon-content {
+            text-align: center; /* Căn giữa nội dung */
+        }
+
+    </style>
+</head>
+
+<body class="goto-here" onload="status(@Model.order.Status)">
+    <main class="main-content position-relative">
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0">
+                            <h6>Chi tiết đơn hàng</h6>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 150px;">
+                                                Sản Phẩm
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 200px;">
+                                                Tên Sản Phẩm
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 200px;">
+                                                Số Lượng
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 150px;">
+                                                Giá
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.order.OrderDetails)
+                                        {
+                                            <tr>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    <img src="@item.Product.Image" alt="Product Image" style="width: 140px; height: auto;" />
+                                                </td>
+
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.Product.Name)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                                </td>
+                                                <td class="text-secondary text-xs font-weight-bold">
+                                                    @Html.DisplayFor(modelItem => item.Price) VNĐ
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="container px-1 px-md-4 py-5 mx-auto">
+        <div class="card">
+            <div class="container">
+                <div class="row d-flex justify-content-between align-items-center px-3 top">
+                    <div>
+                        <h5>Người đặt<span class="text-primary font-weight-bold" id="orderId">@Model.order.User.Username</span></h5><span></span>
+                        <h5>Đơn Hàng <span class="text-primary font-weight-bold" id="orderId">@Model.order.Id</span></h5><span></span>
+                        <h5>Giá <span class="text-primary font-weight-bold" id="orderId">@Model.order.TotalPrice VNĐ</span></h5><span></span>
+
+                    </div>
+                    <div class="d-flex flex-column text-sm-left">
+                        <p class="mb-0">Ngày Tạo <span id="orderDate">@Model.order.CreateAt</span></p>
+                        <p>USPS <span class="font-weight-bold" id="usps">234094567242423422898</span></p>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center align-items-center mt-3">
+                    <div class="col-12">
+                        <ul id="progressbar" class="text-center">
+                            <li class="step0" id="1"></li>
+                            <li class="step0" id="2"></li>
+                            <li class="step0" id="3"></li>
+                            <li class="step0" id="4"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row justify-content-between top">
+                    <div class="col-3 d-flex icon-content active">
+                        <div class="d-flex align-items-center">
+                            <img class="iconOrder" src="~/img/9nnc9Et.png" alt="Order Processed">
+                            <p class="font-weight-bold mb-0 ml-2">Đơn hàng<br>Đang Chờ Xác Nhận</p>
+                        </div>
+                    </div>
+                    <div class="col-3 d-flex icon-content">
+                        <div class="d-flex align-items-center">
+                            <img class="iconOrder" src="~/img/u1AzR7w.png" alt="Order Shipped">
+                            <p class="font-weight-bold mb-0 ml-2">Đơn hàng<br>Đang Đóng Gói</p>
+                        </div>
+                    </div>
+                    <div class="col-3 d-flex icon-content">
+                        <div class="d-flex align-items-center">
+                            <img class="iconOrder" src="~/img/TkPm63y.png" alt="Order In Route">
+                            <p class="font-weight-bold mb-0 ml-2">Đơn hàng<br>Đang tới</p>
+                        </div>
+                    </div>
+                    <div class="col-3 d-flex icon-content">
+                        <div class="d-flex align-items-center">
+                            <img class="iconOrder" src="~/img/HdsziHP.png" alt="Order Arrived">
+                            <p class="font-weight-bold mb-0 ml-2">Đơn hàng<br>Đã chuyển</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row justify-content-between top">
+                    <!-- Hàng thứ hai (có thể thêm nội dung nếu cần) -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function status(status) {
+
+        if (status >= 0) {
+            document.getElementById("1").classList.add("active");
+        }
+        if (status >= 1) {
+            document.getElementById("2").classList.add("active");
+        }
+        if (status >= 2) {
+            document.getElementById("3").classList.add("active");
+        }
+        if (status >= 3) {
+            document.getElementById("4").classList.add("active");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+
+    });
+</script>

@@ -16,6 +16,7 @@ namespace GreenShop
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddScoped<AuthServicecs>();
+            builder.Services.AddScoped<EmailService>();
 
             // Add services to the container.
             builder.Services.AddDbContext<GreenShopContext>(options =>

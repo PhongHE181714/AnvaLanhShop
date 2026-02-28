@@ -34,22 +34,11 @@
 									<div class="mb-3">
 										<input type="email" id="email" name="email" required class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
 									</div>
-									<div class="mb-3">
-										<input type="password" id="password" name="password" required class="form-control" placeholder="Mật Khẩu" aria-label="Password" aria-describedby="password-addon">
-									</div>
 									<!-- Display success message if it exists -->
-									@if (ViewBag.SuccessMessage != null)
+									@if (!string.IsNullOrEmpty(Model.ErrorMessage))
 									{
-										<div class="alert alert-success">
-											@ViewBag.SuccessMessage
-										</div>
-									}
-
-									<!-- Display error message if it exists -->
-									@if (ViewBag.ErrorMessage != null)
-									{
-										<div class="alert alert-danger">
-											@ViewBag.ErrorMessage
+										<div class="alert alert-danger" style="color: white;">
+											@Model.ErrorMessage
 										</div>
 									}
 

@@ -1,0 +1,127 @@
+@page
+@model GreenShop.Pages.Login.VerifyModel
+@{
+    Layout = "~/Pages/Shared/LoginLayout.cshtml";
+}
+
+<body>
+    <main class="main-content mt-0">
+        <section>
+            <div class="page-header min-vh-75">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+                            <div class="card card-plain mt-8">
+                                <div class="card-header pb-0 text-left bg-transparent">
+                                    <h3 class="font-weight-bolder text-success text-gradient">Email Verification</h3>
+                                    <p class="mb-0">Please enter the 6-digit code sent to your email.</p>
+                                </div>
+                                <div class="card-body">
+                                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                                    {
+                                        <div class="alert alert-danger" role="alert" style="color: white;">
+                                            @Model.ErrorMessage
+                                        </div>
+                                    }
+                                    <form method="post">
+                                        <input type="hidden" asp-for="Email" />
+                                        <input type="hidden" asp-for="Username" />
+                                        <input type="hidden" asp-for="ExpectedCode" />
+                                        <input type="hidden" asp-for="StartTime" />
+                                        <input type="hidden" asp-for="IsCodeVerified" />
+
+                                        @if (!Model.IsCodeVerified)
+                                        {
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <label>Verification Code</label>
+                                                <span id="timer-box" class="badge badge-sm bg-gradient-warning mb-2">
+                                                    Expires in: <span id="countdown">60s</span>
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <input type="text" asp-for="VerificationCode" class="form-control" placeholder="123456" maxlength="6" autocomplete="one-time-code" inputmode="numeric">
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="submit" class="btn bg-gradient-success w-100 mt-4 mb-0">Continue</button>
+                                            </div>
+                                            
+                                            <div class="text-center mt-3" id="resend-container" style="display: none;">
+                                                <p class="text-sm mb-0">Didn't receive the code or it expired?</p>
+                                                <button type="submit" asp-page-handler="Resend" class="btn btn-link text-success p-0 font-weight-bold">Resend New Code</button>
+                                            </div>
+
+                                            <script>
+                                                (function() {
+                                                    const startTimeMs = parseInt("@Model.StartTime");
+                                                    if (isNaN(startTimeMs)) {
+                                                        const tb = document.getElementById('timer-box');
+                                                        if (tb) tb.style.display = 'none';
+                                                        return;
+                                                    }
+
+                                                    const expiryTimeMs = startTimeMs + 60000;
+                                                    const countdownEl = document.getElementById('countdown');
+                                                    const timerBox = document.getElementById('timer-box');
+
+                                                    function updateTimer() {
+                                                        const now = Date.now();
+                                                        const remaining = Math.max(0, Math.floor((expiryTimeMs - now) / 1000));
+                                                        
+                                                        if (countdownEl) {
+                                                            countdownEl.innerText = remaining + "s";
+                                                        }
+
+                                                        if (remaining <= 0) {
+                                                            if (timerBox) {
+                                                                timerBox.classList.remove('bg-gradient-warning');
+                                                                timerBox.classList.add('bg-gradient-danger');
+                                                                timerBox.innerHTML = '<strong>Expired</strong>';
+                                                            }
+                                                            const resendCont = document.getElementById('resend-container');
+                                                            if (resendCont) resendCont.style.display = 'block';
+                                                            
+                                                            if (typeof timerInterval !== 'undefined') clearInterval(timerInterval);
+                                                        }
+                                                    }
+
+                                                    updateTimer();
+                                                    const timerInterval = setInterval(updateTimer, 1000);
+                                                })();
+                                            </script>
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" asp-for="VerificationCode" />
+                                            <label>New Password</label>
+                                            <div class="mb-3 position-relative">
+                                                <input type="password" asp-for="Password" id="regPassword" required class="form-control" placeholder="New Password" minlength="8">
+                                                <button type="button" class="btn btn-link position-absolute end-0 top-0 mt-n1 me-2 shadow-none" onclick="togglePassword('regPassword', this)" style="z-index: 10;">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <label>Confirm Password</label>
+                                            <div class="mb-3 position-relative">
+                                                <input type="password" asp-for="ConfirmPassword" id="confirmRegPassword" required class="form-control" placeholder="Confirm Password" minlength="8">
+                                                <button type="button" class="btn btn-link position-absolute end-0 top-0 mt-n1 me-2 shadow-none" onclick="togglePassword('confirmRegPassword', this)" style="z-index: 10;">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="submit" class="btn bg-gradient-success w-100 mt-4 mb-0">Complete Registration</button>
+                                            </div>
+                                        }
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('/img/green-and-white-marbled-coloring.jpg')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>

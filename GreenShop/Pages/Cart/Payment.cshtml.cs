@@ -74,7 +74,7 @@ namespace GreenShop.Pages.Shop
 					acqId = 970422,
 					//acqId = 970426,
 					amount = (int)price,
-                    addInfo = user == null ? "" : " " + user.Username.ToUpper() + " - " + detail.PhoneNumber + " chuyen khoan EcoNest",
+                    addInfo = user == null ? "" : " " + user.Username.ToUpper() + " - " + detail.PhoneNumber + " chuyen khoan An và Lành",
                     format = "text",
                     template = "compact"
                 };
