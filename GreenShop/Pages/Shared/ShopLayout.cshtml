@@ -265,10 +265,7 @@
 					<p style="color:red;">Error reading token: @ex.Message</p>
 				}
 			}
-			else
-			{
-				<p>No AuthToken cookie found.</p>
-			}
+			
 		}
 
 		<div class="container">
@@ -317,7 +314,7 @@
 
 						@if (!string.IsNullOrEmpty(username))
 						{
-							<li class="nav-item dropdown">
+							<li style="width:20%" class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #8dc63f; font-weight: bold;">
 									@username
 								</a>
