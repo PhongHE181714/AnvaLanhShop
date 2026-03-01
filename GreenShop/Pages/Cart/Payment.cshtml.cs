@@ -17,13 +17,18 @@ namespace GreenShop.Pages.Shop
             _context = context;
         }
         public string url {  get; set; }
-        public IActionResult OnGet(double price,int method)
+        public IActionResult OnGet(double price, int method, List<Guid> selectedCarts)
         {
             this.itemCart = getCart();
             Guid? userId = getIdFromToken();
             Models.User user = _context.Users.FirstOrDefault(x => x.Id == userId);
             ShipmentDetail detail = _context.ShipmentDetails.FirstOrDefault(x=>x.UserId==userId);
-            List<Models.Cart> carts = _context.Carts.Include(x => x.Product).Where(x => x.UserId == userId).ToList();
+            List<Models.Cart> carts = _context.Carts
+                .Include(x => x.Product)
+                    .ThenInclude(p => p.ProductSizes)
+                .Include(x => x.ProductSize)
+                .Where(x => x.UserId == userId && selectedCarts.Contains(x.Id))
+                .ToList();
             Guid paymentId=Guid.NewGuid(); 
             //add order and delete cart
             if (user != null && detail != null && carts.Count>0) {
@@ -49,7 +54,13 @@ namespace GreenShop.Pages.Shop
                         orderDetail.OrderId = order.Id  ;
                         orderDetail.ProductId = cart.ProductId;
                         orderDetail.Quantity = cart.Quantity;
-                        orderDetail.Price = cart.Product.Price;
+                        // Use specifically selected ProductSize price if available
+                        var unitPrice = cart.ProductSize != null 
+                            ? cart.ProductSize.Price 
+                            : (cart.Product.ProductSizes != null && cart.Product.ProductSizes.Any()
+                                ? cart.Product.ProductSizes.Min(s => s.Price)
+                                : 0);
+                        orderDetail.Price = unitPrice;
                         //add order detail
                         _context.OrderDetails.Add(orderDetail);
                     }
@@ -69,8 +80,8 @@ namespace GreenShop.Pages.Shop
                 {
      //               
 					//accountNo = "03201012538676",
-					accountNo = "0962900476",
-					accountName = "NGUYEN TIEN DANG",
+					accountNo = "0975076951",
+					accountName = "NGUYEN HAI PHONG",
 					acqId = 970422,
 					//acqId = 970426,
 					amount = (int)price,

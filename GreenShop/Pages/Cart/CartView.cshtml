@@ -24,6 +24,104 @@
                 color: black;
             }
 
+        /* ===== MOBILE CART RESPONSIVE ===== */
+        @@media (max-width: 768px) {
+            .ftco-cart .table-responsive { overflow-x: hidden !important; }
+            .ftco-cart .table thead { display: none; }
+            .ftco-cart .table, .ftco-cart .table tbody, .ftco-cart .table tr { display: block; width: 100%; }
+            .ftco-cart .table tr {
+                display: grid !important;
+                grid-template-columns: 35px 1fr 90px;
+                grid-template-areas: 
+                    "check name img"
+                    "check unitprice img"
+                    ". qty img"
+                    "deltotal deltotal deltotal";
+                gap: 12px 10px;
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid #ebebeb;
+                border-radius: 12px;
+                background: #fff;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            }
+            .ftco-cart .table td {
+                display: block; border: none !important; padding: 0 !important; text-align: left !important;
+            }
+            .ftco-cart .table td::before { display: none !important; }
+
+            /* Khu vực Grid */
+            .ftco-cart .table td:nth-child(1) { grid-area: check; display: flex; align-items: flex-start; padding-top: 5px !important; } /* Checkbox */
+            .ftco-cart .table td:nth-child(3) { grid-area: img; } /* Ảnh */
+            .ftco-cart .table td:nth-child(4) { grid-area: name; } /* Tên + Size */
+            .ftco-cart .table td:nth-child(5) { grid-area: unitprice; display: block !important; font-size: 14px; color: #555; } /* Giá Đơn */
+            .ftco-cart .table td:nth-child(6) { grid-area: qty; display: flex; align-items: flex-start; } /* Cộng trừ */
+
+            /* Gộp Xóa và Tổng dưới cùng */
+            .ftco-cart .table td:nth-child(2) { 
+                grid-area: deltotal; 
+                display: flex; align-items: center; justify-content: flex-start; 
+                border-top: 1px dashed #eee !important;
+                padding-top: 12px !important;
+            } /* Xóa */
+            .ftco-cart .table td:nth-child(7) { 
+                grid-area: deltotal; 
+                display: flex; align-items: center; justify-content: flex-end; 
+                border-top: 1px dashed #eee !important;
+                padding-top: 12px !important;
+                font-weight: 800; font-size: 18px; color: #000; pointer-events: none;
+            } /* Tổng */
+
+            /* --- ĐỊNH DẠNG --- */
+            
+            /* Tên Sản Phẩm */
+            .ftco-cart .table td.product-name h3 {
+                font-size: 16px; margin-bottom: 4px; line-height: 1.25; font-weight: 600; color: #111;
+            }
+            .ftco-cart .table td.product-name p {
+                font-size: 13px; color: #888; margin: 0;
+            }
+
+            /* Hình Ảnh */
+            .ftco-cart .table td:nth-child(3) .img {
+                width: 100%; height: 120px; border-radius: 8px; display: block;
+                background-size: cover; background-position: center; border: 1px solid #f0f0f0;
+            }
+
+            /* Cụm Nút Số Lượng (Sửa Lỗi Xuống Dòng) */
+            .ftco-cart .cart-list .input-group {
+                width: 110px !important; margin: 0 !important;
+                border: 1px solid #ddd; border-radius: 20px;
+                background: #fff;
+                display: flex !important;
+                flex-wrap: nowrap !important; /* KHÔNG CHO PHÉP XUỐNG DÒNG */
+            }
+            .ftco-cart .cart-list .input-group-prepend, 
+            .ftco-cart .cart-list .input-group-append {
+                display: flex;
+            }
+            .ftco-cart .cart-list .input-group .btn {
+                padding: 0 12px !important; height: 32px !important; background: transparent; border: none; color: #333; font-size: 18px;
+                display: flex; align-items: center; justify-content: center;
+            }
+            .ftco-cart .cart-list .input-group .quantity {
+                height: 32px !important; padding: 0 !important; border: none; text-align: center; color: #111; font-weight: 600; font-size: 15px; width: 40px !important; flex: 1;
+            }
+
+            /* Nút Xóa */
+            .ftco-cart .remove-icon {
+                border: none; background: transparent; color: #888; font-size: 15px; display: flex; align-items: center; padding: 0; height: auto; width: auto; text-transform: none;
+            }
+            .ftco-cart .remove-icon:hover { color: #dc3545; background: transparent; }
+            .ftco-cart .remove-icon .ion-ios-close { display: none; }
+            .ftco-cart .remove-icon::before { content: "\f2d2"; font-family: "Ionicons"; font-size: 18px; margin-right: 6px; }
+            .ftco-cart .remove-icon::after { content: "Xóa"; font-family: Arial, sans-serif; }
+
+            .table {
+                min-width: 0 !important;
+                width: 100% !important;
+            }
+        }
 
 </style>
 </head>
@@ -56,8 +154,9 @@
                             <table class="table">
                                 <thead class="thead-primary">
                                     <tr class="text-center">
-                                        <th>&nbsp;</th>
-                                        <th>&nbsp;</th>
+                                        <th>Chọn</th>
+                                        <th>Xóa</th>
+                                        <th>Ảnh</th>
                                         <th>Sản Phẩm</th>
                                         <th>Giá</th>
                                         <th>Số Lượng</th>
@@ -68,38 +167,44 @@
                                     @foreach (var item in Model.Carts)
                                     {
                                         <tr class="text-center">
-                                            <td>
-                                                <a asp-page="/Cart/Delete" asp-route-changeAction="-1" asp-route-productId="@item.Product.Id" class="remove-icon">
+                                            <td data-label="Chọn">
+                                                @{
+                                                    var pPrice = item.ProductSize != null 
+                                                        ? (double)item.ProductSize.Price 
+                                                        : (item.Product.ProductSizes.Any() ? (double)item.Product.ProductSizes.Min(s => s.Price) : 0);
+                                                }
+                                                <input type="checkbox" name="selectedCarts" class="cart-item-checkbox" value="@item.Id" data-price="@pPrice" data-quantity="@item.Quantity" onchange="updateTotal()" checked="checked" />
+                                            </td>
+                                            <td data-label="Xóa">
+                                                <a asp-page="/Cart/Delete" asp-route-changeAction="-1" asp-route-productId="@item.Product.Id" asp-route-sizeId="@item.ProductSizeId" class="remove-icon">
                                                     <span class="ion-ios-close"></span>
                                                 </a>
                                             </td>
 
-                                            <td class="image-prod"><div class="img" style="background-image:url('@item.Product.Image');"></div></td>
+                                            <td class="image-prod" data-label="Ảnh"><div class="img" style="background-image:url('/img/Product/@item.Product.Image');"></div></td>
 
-                                            <td class="product-name">
+                                            <td class="product-name" data-label="Sản Phẩm">
                                                 <h3>@item.Product.Name</h3>
-                                                @{
-                                                    var description = item.Product.Description;
-                                                    var displayDescription = description.Length > 100 ? description.Substring(0, 100) + "..." : description;
-                                                }
-                                                @Html.Raw(displayDescription)
+                                                <p>Size: @(item.ProductSize?.SizeName ?? "Mặc định")</p>
                                             </td>
 
-                                            <td class="price">$@item.Product.Price</td>
+                                            <td class="price" data-label="Giá">
+                                                @(item.ProductSize != null ? item.ProductSize.Price.ToString("N0") : (item.Product.ProductSizes.Any() ? item.Product.ProductSizes.Min(s => s.Price).ToString("N0") : "—"))
+                                            </td>
 
-                                            <td class="quantity">
+                                            <td class="quantity" data-label="Số Lượng">
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <a href="Edit?changeAction=-1&productId=@item.Product.Id" class="btn btn-outline-secondary">-</a>
+                                                        <a href="Edit?changeAction=-1&productId=@item.Product.Id@(item.ProductSizeId != null ? $"&sizeId={item.ProductSizeId}" : "")" class="btn btn-outline-secondary">-</a>
                                                     </div>
-                                                    <input type="text" name="quantity" class="quantity form-control input-number" value="@item.Quantity" min="1" max="100" disabled>
+                                                    <input type="number" name="quantity" class="quantity form-control input-number" value="@item.Quantity" min="1" max="100" onchange="window.location.href='Edit?changeAction=0&productId=@item.Product.Id@(item.ProductSizeId != null ? $"&sizeId={item.ProductSizeId}" : "")&exactQuantity=' + this.value;">
                                                     <div class="input-group-append">
-                                                        <a href="Edit?changeAction=1&productId=@item.Product.Id" class="btn btn-outline-secondary">+</a>
+                                                        <a href="Edit?changeAction=1&productId=@item.Product.Id@(item.ProductSizeId != null ? $"&sizeId={item.ProductSizeId}" : "")" class="btn btn-outline-secondary">+</a>
                                                     </div>
                                                 </div>
                                             </td>
 
-                                            <td class="total">$@(item.Product.Price * item.Quantity)</td>
+                                            <td class="total" data-label="Tổng">@((item.ProductSize != null ? (float)item.ProductSize.Price : (item.Product.ProductSizes.Any() ? (float)item.Product.ProductSizes.Min(s => s.Price) : 0f)) * item.Quantity) vn₫</td>
                                         </tr>
                                     }
 
@@ -158,7 +263,7 @@
                                 <p class="d-flex">
                                     <span>Phương Thức Thanh Toán</span>
 
-                                    <input type="hidden" name="price" value="@Model.totalPrice" />
+                                    <input type="hidden" name="price" id="totalPriceVal" value="0" />
 
                                     <select name="method">
                                         <option value="0">COD</option>
@@ -177,7 +282,7 @@
                                 <hr>
                                 <p class="d-flex total-price">
                                     <span>Tổng Thanh Toán</span>
-                                    <span>$@Model.totalPrice</span>
+                                    <span id="displayTotalPrice">0 vn₫</span>
                                 </p>
                             </div>
                         </form>
@@ -358,8 +463,8 @@
                     var modalId = modal.id;
                     renderCity(result.data, modalId);
                 }); // Modal Add
-
-
+                
+                updateTotal();
             });
 
             function renderCity(data, modalId) {
@@ -429,18 +534,49 @@
                     }
                 });
             });
+
+            // Calculate cart total immediately on page load
+            updateTotal();
         });
     </script>
     <script type="text/javascript">
-        function makePayment() {
+        function updateTotal() {
+            var checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+            var total = 0;
+            checkboxes.forEach(function(cb) {
+                var price = parseFloat(cb.getAttribute("data-price"));
+                var qty = parseInt(cb.getAttribute("data-quantity"));
+                total += (price * qty);
+            });
+            document.getElementById("displayTotalPrice").innerText = total.toLocaleString("vi-VN") + " vn₫";
+            document.getElementById("totalPriceVal").value = total;
+        }
 
+        function makePayment() {
             var shipment = document.getElementById("shipment");
+            var checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
             if (shipment == null){
                 alert("Bạn cần thêm địa chỉ để hoàn thành việc order!");
-            } else {
-                document.getElementById("paymentId").submit();
-
+                return;
+            } 
+            if (checkboxes.length === 0) {
+                alert("Bạn chưa chọn sản phẩm nào để thanh toán!");
+                return;
             }
+            
+            var form = document.getElementById("paymentId");
+            document.querySelectorAll('.appended-cart-id').forEach(e => e.remove());
+            
+            checkboxes.forEach(function(cb) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "selectedCarts";
+                input.value = cb.value;
+                input.className = "appended-cart-id";
+                form.appendChild(input);
+            });
+            
+            form.submit();
         }
     </script>
 </body>

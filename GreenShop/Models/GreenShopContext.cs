@@ -33,6 +33,8 @@ public partial class GreenShopContext : DbContext
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
+    public virtual DbSet<ProductSize> ProductSizes { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<ShipmentDetail> ShipmentDetails { get; set; }
@@ -69,6 +71,10 @@ public partial class GreenShopContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.ProductSize).WithMany()
+                .HasForeignKey(d => d.ProductSizeId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -231,6 +237,17 @@ public partial class GreenShopContext : DbContext
         {
             entity.ToTable("Tag"); 
            
+        });
+
+        modelBuilder.Entity<ProductSize>(entity =>
+        {
+            entity.ToTable("ProductSize");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductSizes)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -68,8 +68,9 @@ namespace GreenShop.Pages.Products
                 .ToListAsync();
           
             // Query cơ bản
-            IQueryable <Product> query = _context.Products
+            IQueryable<Product> query = _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductSizes)
                 .AsQueryable();
 
            
@@ -85,8 +86,6 @@ namespace GreenShop.Pages.Products
             query = sortOrder switch
             {
                 "name_desc" => query.OrderByDescending(p => p.Name),
-                "price_asc" => query.OrderBy(p => p.Price),
-                "price_desc" => query.OrderByDescending(p => p.Price),
                 _ => query.OrderBy(p => p.Name)
             };
 

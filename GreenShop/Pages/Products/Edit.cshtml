@@ -9,47 +9,88 @@
 <h1>Edit Product</h1>
 
 <div class="row">
-    <div class="col-md-4">
-        <form id="editForm" method="post">
+    <div class="col-12 col-lg-8">
+        <form id="editForm" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Product.Id" />
 
-            <div class="form-group">
-                <label asp-for="Product.Name"></label>
+            <div class="mb-3">
+                <label asp-for="Product.Name" class="form-label fw-bold"></label>
                 <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Product.Price"></label>
-                <input asp-for="Product.Price" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="Product.Description" class="form-label fw-bold"></label>
+                <textarea asp-for="Product.Description" class="form-control" rows="4"></textarea>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Product.Quantity"></label>
-                <input asp-for="Product.Quantity" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="Product.CategoryId" class="form-label fw-bold">Category</label>
+                <select asp-for="Product.CategoryId" class="form-select" asp-items="Model.CategoryList"></select>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Product.Image"></label>
-                <input asp-for="Product.Image" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="Product.Status" class="form-label fw-bold"></label>
+                <select asp-for="Product.Status" class="form-select" asp-items="Model.StatusList"></select>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Product.Description"></label>
-                <input asp-for="Product.Description" class="form-control" />
+            <div class="mb-3">
+                <label class="form-label fw-bold">Current Image</label>
+                <div class="mb-2">
+                    @if (!string.IsNullOrEmpty(Model.Product.Image))
+                    {
+                        <img src="/img/Product/@Model.Product.Image" alt="Product Image" style="max-height: 200px;" class="img-thumbnail" />
+                    }
+                    else
+                    {
+                        <span>No image</span>
+                    }
+                </div>
+                <label class="form-label fw-bold">Change Image (optional)</label>
+                <input type="file" name="UploadedImage" class="form-control" accept="image/*" />
+                <small class="text-muted">Max file size: 10MB</small>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Product.CategoryId"></label>
-                <select asp-for="Product.CategoryId" asp-items="Model.CategoryList" class="form-control">
-                    <option value="" disabled>-- Chọn danh mục --</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Product.Status"></label>
-                <select asp-for="Product.Status" asp-items="Model.StatusList" class="form-control">
-                    <option value="" disabled>-- Chọn trạng thái --</option>
-                </select>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Product Sizes</label>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="sizesTable">
+                        <thead>
+                            <tr>
+                                <th>Size Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Product.ProductSizes != null && Model.Product.ProductSizes.Any())
+                            {
+                                var index = 0;
+                                foreach (var size in Model.Product.ProductSizes)
+                                {
+                                    <tr>
+                                        <td><input type="text" name="ProductSizes[@index].SizeName" value="@size.SizeName" class="form-control" required /></td>
+                                        <td><input type="number" step="0.01" name="ProductSizes[@index].Price" value="@size.Price" class="form-control" required /></td>
+                                        <td><input type="number" name="ProductSizes[@index].Quantity" value="@size.Quantity" class="form-control" required /></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm remove-size">Remove</button></td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td><input type="text" name="ProductSizes[0].SizeName" class="form-control" placeholder="250ml" required /></td>
+                                    <td><input type="number" step="0.01" name="ProductSizes[0].Price" class="form-control" required /></td>
+                                    <td><input type="number" name="ProductSizes[0].Quantity" class="form-control" required /></td>
+                                    <td><button type="button" class="btn btn-danger btn-sm remove-size" disabled>Remove</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" id="addSize" class="btn btn-info btn-sm">Add Another Size</button>
+                </div>
             </div>
 
             <div class="form-group mt-3">
@@ -65,35 +106,85 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        let sizeIndex = @(Model.Product.ProductSizes?.Count ?? 1);
+        document.getElementById("addSize").addEventListener("click", function() {
+            const tbody = document.querySelector("#sizesTable tbody");
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td><input type="text" name="ProductSizes[${sizeIndex}].SizeName" class="form-control" placeholder="500ml" required /></td>
+                <td><input type="number" step="0.01" name="ProductSizes[${sizeIndex}].Price" class="form-control" required /></td>
+                <td><input type="number" name="ProductSizes[${sizeIndex}].Quantity" class="form-control" required /></td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-size">Remove</button></td>
+            `;
+            tbody.appendChild(newRow);
+            sizeIndex++;
+            updateRemoveButtons();
+        });
+
+        document.querySelector("#sizesTable tbody").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-size")) {
+                e.target.closest("tr").remove();
+                reIndexSizes();
+                updateRemoveButtons();
+            }
+        });
+
+        function reIndexSizes() {
+            const rows = document.querySelectorAll("#sizesTable tbody tr");
+            rows.forEach((row, index) => {
+                row.querySelectorAll("input").forEach(input => {
+                    const name = input.getAttribute("name");
+                    if (name) {
+                        input.setAttribute("name", name.replace(/\[\d+\]/, `[${index}]`));
+                    }
+                });
+            });
+            sizeIndex = rows.length;
+        }
+
+        function updateRemoveButtons() {
+            const buttons = document.querySelectorAll(".remove-size");
+            if (buttons.length === 1) {
+                // If there's only one size, don't allow removing it if we want at least one size
+                // But user might want to delete all? Usually at least one size is needed.
+                buttons[0].disabled = true;
+            } else {
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        }
+        updateRemoveButtons();
+
         document.getElementById("editForm").addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            const formData = new FormData(this);
+            const form = this;
+            const formData = new FormData(form);
 
-            const response = await fetch(window.location.pathname, {
-                method: "POST",
-                body: formData,
-                headers: { "X-Requested-With": "XMLHttpRequest" }
-            });
+            try {
+                const response = await fetch(window.location.pathname, {
+                    method: "POST",
+                    body: formData,
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                });
 
-            if (response.ok) {
-                console.log("Product updated successfully");
-                window.location.href = "/Products";
-            }
-            else if (response.status === 400) {
-            const errors = await response.json();
-            let msg = "";
-
-            for (const key in errors) {
-                msg += errors[key].join("\n") + "\n";
-            }
-
-            alert(msg);
-        }
-            else {
-                const text = await response.text();
-                console.error("❌ Update failed:", text);
-                alert("Error: Failed to update product");
+                if (response.ok) {
+                    console.log("✅ Product updated successfully");
+                    window.location.href = "/Products";
+                } else if (response.status === 400) {
+                    const result = await response.json();
+                    let errorMessage = result.message || "Invalid input.";
+                    if (result.errors) {
+                        errorMessage = Object.values(result.errors).flat().join("\n");
+                    }
+                    alert(errorMessage);
+                } else {
+                    const text = await response.text();
+                    console.error("❌ Update failed:", text);
+                    alert("Error: Failed to update product");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Unexpected error occurred.");
             }
         });
     </script>

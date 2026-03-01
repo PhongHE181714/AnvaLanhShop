@@ -21,7 +21,9 @@ namespace GreenShop.Pages.Shop
 		public async Task OnGet(Guid id)
         {
             itemCart = getCart();
-			Product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
+			Product = await _context.Products
+                .Include(p => p.ProductSizes)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
 			SimilarProducts = await _context.Products.Take(4).ToListAsync();
 

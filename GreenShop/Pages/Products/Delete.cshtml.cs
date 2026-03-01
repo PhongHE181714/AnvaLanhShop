@@ -29,7 +29,9 @@ namespace GreenShop.Pages.Products
             if (id == null || _context.Products == null)
                 return NotFound();
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                .Include(p => p.ProductSizes)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
                 return NotFound();
 

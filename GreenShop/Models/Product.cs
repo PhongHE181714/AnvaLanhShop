@@ -9,10 +9,6 @@ public partial class Product
 
     public string Name { get; set; } = null!;
 
-    public float Price { get; set; }
-
-    public int Quantity { get; set; }
-
     public string Image { get; set; } = null!;
 
     public float Rate { get; set; }
@@ -33,4 +29,6 @@ public partial class Product
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+
+    public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
 }

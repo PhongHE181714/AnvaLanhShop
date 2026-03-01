@@ -12,16 +12,16 @@ namespace GreenShop.Pages.Cart
         {
             _context = context;
         }
-        public IActionResult OnGet(int changeAction, Guid productId)
+        public IActionResult OnGet(int changeAction, Guid productId, Guid? sizeId = null, int? exactQuantity = null)
         {
             Guid? userId = getIdFromToken();
             Models.Cart cart;
             if (userId != null)
             {
-                cart = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId);
-                int a = cart.Quantity + changeAction;
+                cart = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId && c.ProductSizeId == sizeId);
+                int a = exactQuantity ?? (cart.Quantity + changeAction);
                 {
-                    if (a == 0)
+                    if (a <= 0)
                     {
                         _context.Carts.Remove(cart);
                         _context.SaveChanges();

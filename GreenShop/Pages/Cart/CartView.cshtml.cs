@@ -25,7 +25,11 @@ namespace GreenShop.Pages.Cart
         public async Task OnGet()
         {
             Guid userId = (Guid)getIdFromToken();
-            Carts= await _context.Carts.Include(x=>x.Product).Where(x=>x.UserId==userId).ToListAsync();
+            Carts = await _context.Carts
+                .Include(x => x.Product)
+                    .ThenInclude(p => p.ProductSizes)
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
             shipment=await _context.ShipmentDetails.Where(x=>x.UserId == userId && x.Status==1).FirstOrDefaultAsync(); 
             
             if(shipment!=null)
@@ -63,11 +67,20 @@ namespace GreenShop.Pages.Cart
             if (userId != null)
             {
                 List<Models.Cart> cart = new List<Models.Cart>();
-                cart = _context.Carts.Include(x=>x.Product).Where(c => c.UserId == userId).ToList();
+                cart = _context.Carts
+                    .Include(x => x.Product)
+                        .ThenInclude(p => p.ProductSizes)
+                    .Where(c => c.UserId == userId)
+                    .ToList();
                 double price = 0;
                 foreach (var item in cart)
                 {
-                    price += (item.Quantity * item.Product.Price);
+                    var unitPrice = item.ProductSize != null 
+                        ? (double)item.ProductSize.Price 
+                        : (item.Product.ProductSizes != null && item.Product.ProductSizes.Any()
+                            ? (double)item.Product.ProductSizes.Min(s => s.Price)
+                            : 0);
+                    price += item.Quantity * unitPrice;
                 }
                 return price;
             }

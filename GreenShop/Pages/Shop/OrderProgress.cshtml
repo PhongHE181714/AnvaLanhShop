@@ -57,11 +57,16 @@
                                         {
                                             <tr>
                                                 <td class="text-secondary text-xs font-weight-bold">
-                                                    <img src="@item.Product.Image" alt="Product Image" style="width: 140px; height: auto;" />
+                                                    <img src="/img/Product/@item.Product.Image" alt="Product Image" style="width: 140px; height: auto;" />
                                                 </td>
 
                                                 <td class="text-secondary text-xs font-weight-bold">
                                                     @Html.DisplayFor(modelItem => item.Product.Name)
+                                                    <br/>
+                                                    @{
+                                                        var sizeMatch = item.Product.ProductSizes?.FirstOrDefault(s => s.Price == item.Price);
+                                                    }
+                                                    <small class="text-muted">Size: @(sizeMatch?.SizeName ?? "Mặc định")</small>
                                                 </td>
                                                 <td class="text-secondary text-xs font-weight-bold">
                                                     @Html.DisplayFor(modelItem => item.Quantity)

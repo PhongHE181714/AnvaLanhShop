@@ -1,4 +1,3 @@
-using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,7 +19,7 @@ namespace GreenShop.Pages.Shop
         public IList<Product> Product { get; set; } = default!;
         public IActionResult OnGet()
         {
-            Product=_context.Products.ToList();
+            Product = _context.Products.Include(p => p.ProductSizes).ToList();
             Product = Product.Take(8).ToList();
             this.itemCart = getCart();
 			return Page();

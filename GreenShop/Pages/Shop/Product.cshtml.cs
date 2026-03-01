@@ -53,6 +53,7 @@ namespace GreenShop.Pages.Shop
             categories = await _context.Categories.ToListAsync();
 
             var products = _context.Products
+                 .Include(p => p.ProductSizes)
                  .Where(p => p.Status == 1)
                  .AsQueryable();
 
@@ -71,7 +72,7 @@ namespace GreenShop.Pages.Shop
             // --- Lọc giá ---
             if (priceLow.HasValue && priceHigh.HasValue)
             {
-                products = products.Where(p => p.Price >= priceLow && p.Price <= priceHigh);
+                products = products.Where(p => p.ProductSizes.Any(s => s.Price >= priceLow && s.Price <= priceHigh));
             }
 
             // --- Sắp xếp ---
@@ -80,10 +81,10 @@ namespace GreenShop.Pages.Shop
                 switch (sort)
                 {
                     case 2: // Giá thấp nhất
-                        products = products.OrderBy(p => p.Price);
+                        products = products.OrderBy(p => p.ProductSizes.Min(s => (float?)s.Price) ?? 0);
                         break;
                     case 3: // Giá cao nhất
-                        products = products.OrderByDescending(p => p.Price);
+                        products = products.OrderByDescending(p => p.ProductSizes.Max(s => (float?)s.Price) ?? 0);
                         break;
                     case 4: // Đánh giá cao
                         products = products.OrderByDescending(p => p.Rate);
@@ -105,10 +106,10 @@ namespace GreenShop.Pages.Shop
 
             // --- Nhóm sản phẩm đặc biệt ---
             Guid tam = new Guid("D8F15903-EFA0-423A-A9F8-856909C4E27B");
-            ProductT = await _context.Products.Where(x => x.CategoryId == tam).ToListAsync();
+            ProductT = await _context.Products.Include(p => p.ProductSizes).Where(x => x.CategoryId == tam).ToListAsync();
 
             Guid com = new Guid("D8F15903-EFA0-423A-A9F8-856909C4E27C");
-            ProductC = await _context.Products.Where(x => x.CategoryId == com).ToListAsync();
+            ProductC = await _context.Products.Include(p => p.ProductSizes).Where(x => x.CategoryId == com).ToListAsync();
 
             // --- Giỏ hàng ---
             this.itemCart = getCart();

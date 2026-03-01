@@ -20,7 +20,14 @@ namespace GreenShop.Pages.Shop
         public IActionResult OnGet(Guid id)
         {
             order = _context.Orders.Include(o => o.User).FirstOrDefault(o => o.Id == id);
-            orderDetail = _context.OrderDetails.Include(o => o.Product).FirstOrDefault(od => od.OrderId == id);
+            // Include OrderDetails explicitly and load ProductSizes so we can look up matching sizes later
+            order.OrderDetails = _context.OrderDetails
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.ProductSizes)
+                .Where(od => od.OrderId == id)
+                .ToList();
+            
+            orderDetail = order.OrderDetails.FirstOrDefault();
             this.itemCart = getCart();
             return Page();
         }

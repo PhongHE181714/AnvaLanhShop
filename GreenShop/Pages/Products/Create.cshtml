@@ -13,8 +13,8 @@
                 <h2>Create Product</h2>
             </div>
 
-            <div class="col-6">
-                <form id="createForm" method="post">
+            <div class="col-12 col-lg-8">
+                <form id="createForm" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label asp-for="Product.Name" class="form-label fw-bold"></label>
                         <input asp-for="Product.Name" class="form-control" placeholder="Enter product name" />
@@ -37,18 +37,34 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Product.Price" class="form-label fw-bold"></label>
-                        <input asp-for="Product.Price" class="form-control" />
+                        <label class="form-label fw-bold">Product Image</label>
+                        <input type="file" name="UploadedImage" class="form-control" accept="image/*" required />
+                        <small class="text-muted">Max file size: 10MB</small>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Product.Quantity" class="form-label fw-bold"></label>
-                        <input asp-for="Product.Quantity" class="form-control" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Product.Image" class="form-label fw-bold"></label>
-                        <input asp-for="Product.Image" class="form-control" />
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Product Sizes</label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="sizesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Size Name (e.g. 250ml)</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" name="ProductSizes[0].SizeName" class="form-control" placeholder="250ml" required /></td>
+                                        <td><input type="number" step="0.01" name="ProductSizes[0].Price" class="form-control" required /></td>
+                                        <td><input type="number" name="ProductSizes[0].Quantity" class="form-control" required /></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm remove-size" disabled>Remove</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" id="addSize" class="btn btn-info btn-sm">Add Another Size</button>
+                        </div>
                     </div>
 
                     <div class="d-flex gap-2">
@@ -63,6 +79,49 @@
 
 @section Scripts {
     <script>
+        let sizeIndex = 1;
+        document.getElementById("addSize").addEventListener("click", function() {
+            const tbody = document.querySelector("#sizesTable tbody");
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td><input type="text" name="ProductSizes[${sizeIndex}].SizeName" class="form-control" placeholder="500ml" required /></td>
+                <td><input type="number" step="0.01" name="ProductSizes[${sizeIndex}].Price" class="form-control" required /></td>
+                <td><input type="number" name="ProductSizes[${sizeIndex}].Quantity" class="form-control" required /></td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-size">Remove</button></td>
+            `;
+            tbody.appendChild(newRow);
+            sizeIndex++;
+            updateRemoveButtons();
+        });
+
+        document.querySelector("#sizesTable tbody").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-size")) {
+                e.target.closest("tr").remove();
+                reIndexSizes();
+                updateRemoveButtons();
+            }
+        });
+
+        function reIndexSizes() {
+            const rows = document.querySelectorAll("#sizesTable tbody tr");
+            rows.forEach((row, index) => {
+                row.querySelectorAll("input").forEach(input => {
+                    const name = input.getAttribute("name");
+                    input.setAttribute("name", name.replace(/\[\d+\]/, `[${index}]`));
+                });
+            });
+            sizeIndex = rows.length;
+        }
+
+        function updateRemoveButtons() {
+            const buttons = document.querySelectorAll(".remove-size");
+            if (buttons.length === 1) {
+                buttons[0].disabled = true;
+            } else {
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        }
+
         document.getElementById("createForm").addEventListener("submit", async function(e) {
             e.preventDefault();
 

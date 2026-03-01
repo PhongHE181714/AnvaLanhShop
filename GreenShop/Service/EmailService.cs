@@ -15,13 +15,13 @@ namespace GreenShop.Service
 
         public async Task SendPasswordResetEmailAsync(string toEmail, string resetUrl)
         {
-            string subject = "GreenShop - Reset Your Password";
+            string subject = "AnvaLanhShop - Reset Your Password";
             string htmlBody = $@"
                     <html>
                         <body style='font-family: Arial, sans-serif;'>
                             <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
                                 <h2 style='color: #28a745;'>Reset Your Password</h2>
-                                <p>You requested to reset your password for your GreenShop account.</p>
+                                <p>You requested to reset your password for your AnvaLanhShop account.</p>
                                 <p>Click the button below to reset your password:</p>
                                 <div style='margin: 30px 0;'>
                                     <a href='{resetUrl}'
@@ -39,7 +39,7 @@ namespace GreenShop.Service
                                 </p>
                                 <hr style='margin: 20px 0; border: none; border-top: 1px solid #ddd;'>
                                 <p style='color: #999; font-size: 12px;'>
-                                    GreenShop Team
+                                    AnvaLanhShop Team
                                 </p>
                             </div>
                         </body>
@@ -50,13 +50,13 @@ namespace GreenShop.Service
 
         public async Task SendVerificationCodeEmailAsync(string toEmail, string code)
         {
-            string subject = "GreenShop - Verify Your Email";
+            string subject = "AnvaLanhShop - Verify Your Email";
             string htmlBody = $@"
                     <html>
                         <body style='font-family: Arial, sans-serif;'>
                             <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
                                 <h2 style='color: #28a745;'>Verify Your Email</h2>
-                                <p>Thank you for registering with GreenShop. Please use the following verification code to complete your registration:</p>
+                                <p>Thank you for registering with AnvaLanhShop. Please use the following verification code to complete your registration:</p>
                                 <div style='margin: 30px 0; text-align: center;'>
                                     <h1 style='color: #28a745; letter-spacing: 5px;'>{code}</h1>
                                 </div>
@@ -65,7 +65,7 @@ namespace GreenShop.Service
                                 </p>
                                 <hr style='margin: 20px 0; border: none; border-top: 1px solid #ddd;'>
                                 <p style='color: #999; font-size: 12px;'>
-                                    GreenShop Team
+                                    AnvaLanhShop Team
                                 </p>
                             </div>
                         </body>
@@ -78,7 +78,7 @@ namespace GreenShop.Service
         {
             var message = new MimeMessage();
             var fromEmail = _configuration["EmailSettings:SenderEmail"];
-            var fromName = _configuration["EmailSettings:FromName"] ?? "GreenShop";
+            var fromName = _configuration["EmailSettings:FromName"] ?? "AnvaLanhShop";
 
             if (string.IsNullOrEmpty(fromEmail))
                 throw new Exception("Email configuration error: 'EmailSettings:SenderEmail' is missing in appsettings.json.");

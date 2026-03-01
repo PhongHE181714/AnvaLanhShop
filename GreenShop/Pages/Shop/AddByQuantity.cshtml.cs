@@ -15,36 +15,57 @@ namespace GreenShop.Pages.Shop
         {
             _context = context;
         }
-        public IActionResult OnGet(int changeAction, Guid productId)
+        public IActionResult OnGet(int changeAction, Guid productId, Guid? sizeId = null)
         {
             Guid? userId = getIdFromToken();
             Models.Cart cart;
             if (userId != null)
             {
-                cart = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId);
+                // Get total stock for this product across all sizes or specifically for the selected size
+                var product = _context.Products
+                    .Include(p => p.ProductSizes)
+                    .FirstOrDefault(p => p.Id == productId);
+
+                int totalStock;
+                if (sizeId != null && product?.ProductSizes != null)
+                {
+                    totalStock = product.ProductSizes.FirstOrDefault(s => s.Id == sizeId)?.Quantity ?? 0;
+                }
+                else 
+                {
+                    totalStock = product?.ProductSizes?.Sum(s => s.Quantity) ?? 0;
+                }
+
+                cart = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId && c.ProductSizeId == sizeId);
                 if (cart == null)
                 {
+                    int qty = Math.Min(changeAction, totalStock);
+                    if (qty <= 0)
+                        return RedirectToPage("./ProductDetails", new { id = productId });
+
                     cart = new Models.Cart();
                     cart.Id = Guid.NewGuid();
                     cart.ProductId = productId;
+                    cart.ProductSizeId = sizeId;
                     cart.UserId = (Guid)userId;
-                    cart.Quantity = changeAction;
+                    cart.Quantity = qty;
                     _context.Carts.Add(cart);
                     _context.SaveChanges();
                     this.itemCart = getCart();
 
                     return RedirectToPage("./ProductDetails", new { id = productId });
-
                 }
                 else
                 {
-                    cart.Quantity += changeAction;
+                    int newQty = cart.Quantity + changeAction;
+                    if (newQty > totalStock) newQty = totalStock;
+                    if (newQty < 1) newQty = 1;
+                    cart.Quantity = newQty;
                     _context.Carts.Update(cart);
                     _context.SaveChanges();
                     this.itemCart = getCart();
 
                     return RedirectToPage("./ProductDetails", new { id = productId });
-
                 }
             }
             else
@@ -53,7 +74,6 @@ namespace GreenShop.Pages.Shop
 
                 return RedirectToPage("./ProductDetails", new { id = productId, alert = "Login First!" });
             }
-
         }
         public int? itemCart { get; set; }
         public int getCart()

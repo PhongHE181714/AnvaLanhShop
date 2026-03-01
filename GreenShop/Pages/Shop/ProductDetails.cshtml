@@ -119,7 +119,7 @@
 			<div class="row">
 				<div class="col-lg-6 mb-5">
 					<a href="images/product_image.jpg" class="image-popup">
-						<img src="@Model.Product.Image" class="img-fluid" alt="Product Image">
+						<img src="/img/Product/@Model.Product.Image" class="img-fluid" alt="Product Image">
 					</a>
 				</div>
 				<div class="col-lg-6 product-details pl-md-5">
@@ -157,7 +157,7 @@
 						</p>
 
 					</div>
-					<p class="price"><span>@Model.Product.Price VND</span></p>
+					<p class="price"><span id="productPrice">@(Model.Product.ProductSizes?.FirstOrDefault()?.Price.ToString("N0") ?? "0") VND</span></p>
 					<p>
 						@Model.Product.Description
 					</p>
@@ -166,24 +166,29 @@
 							<div class="form-group d-flex">
 								<div class="select-wrap">
 									<div class="icon"><span class="ion-ios-arrow-down"></span></div>
-									<select class="form-control">
-										<option value="">Nhỏ</option>
-										<option value="">Vừa</option>
-										<option value="">To</option>
-										<option value="">Rất To</option>
+									<select id="sizeSelect" class="form-control">
+                                        @if (Model.Product.ProductSizes != null && Model.Product.ProductSizes.Any())
+                                        {
+                                            foreach (var size in Model.Product.ProductSizes)
+                                            {
+                                                <option value="@size.Id" data-price="@size.Price" data-quantity="@size.Quantity">@size.SizeName</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="">Default</option>
+                                        }
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="w-100"></div>
 						<div class="input-group col-md-6 d-flex mb-3">
-
-							<input type="number" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="@Model.Product.Quantity">
-
+							<input type="number" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="@(Model.Product.ProductSizes?.FirstOrDefault()?.Quantity ?? 0)">
 						</div>
 						<div class="w-100"></div>
 						<div class="col-md-12">
-							<p style="color: #000;">@Model.Product.Quantity sản phẩm có sẵn</p>
+							<p style="color: #000;"><span id="stockDisplay">@(Model.Product.ProductSizes?.FirstOrDefault()?.Quantity ?? 0)</span> sản phẩm có sẵn</p>
 						</div>
 					</div>
 					<p>
@@ -326,7 +331,7 @@
 						<div class="product">
 							<a href="ProductDetails?id=@product.Id" class="img-prod">
 								<img class="img-fluid"
-									 src="@product.Image">
+									 src="/img/Product/@product.Image">
 								<span class="status">@Math.Round(product.Rate, 1) *</span>
 								<div class="overlay"></div>
 							</a>
@@ -334,7 +339,7 @@
 								<h3><a href="ProductDetails?id=@product.Id">@product.Name</a></h3>
 								<div class="d-flex">
 									<div class="pricing">
-										<p class="price"><span class="price-sale">@product.Price VNĐ</span></p>
+										<p class="price"><span class="price-sale">@(product.ProductSizes.Any() ? product.ProductSizes.Min(s => s.Price).ToString("N0") : "0") VNĐ</span></p>
 									</div>
 								</div>
 								<div class="bottom-area d-flex px-3">
@@ -368,6 +373,31 @@
 	</section>
 
 	<script>
+		// Update price and stock when size is selected
+		const sizeSelect = document.getElementById('sizeSelect');
+		if (sizeSelect) {
+			function updateSizeInfo() {
+				const selected = sizeSelect.options[sizeSelect.selectedIndex];
+				const price = selected ? selected.getAttribute('data-price') : null;
+				const qty = selected ? selected.getAttribute('data-quantity') : null;
+				if (price !== null) {
+					const priceEl = document.getElementById('productPrice');
+					if (priceEl) priceEl.textContent = parseFloat(price).toLocaleString('vi-VN') + ' VND';
+				}
+				if (qty !== null) {
+					const stockEl = document.getElementById('stockDisplay');
+					const qtyInput = document.getElementById('quantity');
+					if (stockEl) stockEl.textContent = qty;
+					if (qtyInput) qtyInput.max = qty;
+				}
+				if (typeof updateCartLink === 'function') {
+					updateCartLink();
+				}
+			}
+			sizeSelect.addEventListener('change', updateSizeInfo);
+			updateSizeInfo(); // run on load
+		}
+
 		function addStar(id) {
 			document.getElementById("rate").value = id;
 		}
@@ -635,9 +665,9 @@
 			var addToCartLink = document.getElementById("addToCartLink");
 			var productId = "@Model.Product.Id";
 
-			// Sử dụng quantity nhập vào hoặc giá trị mặc định nếu không thay đổi
+			var selectedSizeId = document.getElementById("sizeSelect").value;
 			var finalQuantity = (quantity && quantity !== "") ? quantity : defaultQuantity;
-			addToCartLink.href = `AddByQuantity?changeAction=${finalQuantity}&productId=${productId}`;
+			addToCartLink.href = `AddByQuantity?changeAction=${finalQuantity}&productId=${productId}` + (selectedSizeId ? `&sizeId=${selectedSizeId}` : "");
 		}
 
 		// Đảm bảo cập nhật link khi trang tải

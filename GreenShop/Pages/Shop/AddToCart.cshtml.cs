@@ -15,18 +15,19 @@ namespace GreenShop.Pages.Shop
         {
             _context = context;
         }
-        public IActionResult OnGet(int changeAction, Guid productId)
+        public IActionResult OnGet(int changeAction, Guid productId, Guid? sizeId = null)
         {
             Guid? userId = getIdFromToken();
             Models.Cart cart;
             if (userId != null)
             {
-                cart = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId);
+                cart = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId && c.ProductSizeId == sizeId);
                 if (cart == null)
                 {
                     cart = new Models.Cart();
                     cart.Id = Guid.NewGuid();
                     cart.ProductId = productId;
+                    cart.ProductSizeId = sizeId;
                     cart.UserId = (Guid)userId;
                     cart.Quantity = 1;
                     _context.Carts.Add(cart);
