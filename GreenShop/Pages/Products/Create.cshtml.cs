@@ -78,7 +78,7 @@ namespace GreenShop.Pages.Products
                 return BadRequest(new { message = "File size exceeds 10MB limit." });
 
             var fileName = Guid.NewGuid().ToString() + extension;
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "Product", fileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product", fileName);
             var directory = Path.GetDirectoryName(filePath);
             if (directory != null && !Directory.Exists(directory))
                 Directory.CreateDirectory(directory);

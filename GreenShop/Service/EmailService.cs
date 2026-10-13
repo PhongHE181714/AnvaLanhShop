@@ -81,7 +81,7 @@ namespace GreenShop.Service
             var fromName = _configuration["EmailSettings:FromName"] ?? "AnvaLanhShop";
 
             if (string.IsNullOrEmpty(fromEmail))
-                throw new Exception("Email configuration error: 'EmailSettings:SenderEmail' is missing in appsettings.json.");
+                throw new Exception("Email configuration error: set EmailSettings__SenderEmail in .env or the system environment.");
             
             if (string.IsNullOrEmpty(toEmail))
                 throw new Exception("Email error: Recipient address (toEmail) is null or empty.");

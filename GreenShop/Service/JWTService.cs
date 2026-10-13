@@ -5,10 +5,11 @@ using System.Text;
 
 namespace GreenShop.Service
 {
-    public class JwtService(string secretKey, string issuer)
+    public class JwtService(string secretKey, string issuer, string audience)
     {
         private readonly string _secretKey = secretKey;
         private readonly string _issuer = issuer;
+        private readonly string _audience = audience;
 
         public string GenerateToken(string email, int expireMinutes = 30)
         {
@@ -17,7 +18,7 @@ namespace GreenShop.Service
 
             var token = new JwtSecurityToken(
                 _issuer,
-                _issuer,
+                _audience,
                 [
                     new Claim(ClaimTypes.Email, email)
                 ],
@@ -35,7 +36,7 @@ namespace GreenShop.Service
 
             var token = new JwtSecurityToken(
                 _issuer,
-                _issuer,
+                _audience,
                 claim,
                 expires: DateTime.Now.AddDays(expireDays),
                 signingCredentials: credentials
@@ -59,7 +60,7 @@ namespace GreenShop.Service
                     ValidIssuer = _issuer,
 
                     ValidateAudience = true,
-                    ValidAudience = _issuer,
+                    ValidAudience = _audience,
 
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),

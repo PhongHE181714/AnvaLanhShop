@@ -50,7 +50,10 @@ namespace GreenShop.Pages.Login
             Token = token;
 
             // Validate token
-            var jwtService = new JwtService(_configuration["JWT:Secret"]!, _configuration["JWT:ValidIssuer"]!);
+                var jwtService = new JwtService(
+                    _configuration["JWT:Secret"]!,
+                    _configuration["JWT:ValidIssuer"]!,
+                    _configuration["JWT:ValidAudience"]!);
             var principal = jwtService.GetPrincipal(token);
 
             if (principal == null)
@@ -90,7 +93,10 @@ namespace GreenShop.Pages.Login
             }
 
             // Validate token
-            var jwtService = new JwtService(_configuration["JWT:Secret"]!, _configuration["JWT:ValidIssuer"]!);
+                var jwtService = new JwtService(
+                    _configuration["JWT:Secret"]!,
+                    _configuration["JWT:ValidIssuer"]!,
+                    _configuration["JWT:ValidAudience"]!);
             var principal = jwtService.GetPrincipal(Token);
 
             if (principal == null || JwtService.IsTokenExpired(Token))

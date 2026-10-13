@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,7 +59,7 @@ namespace GreenShop.Pages.Orders
                         foreach (var detail in order.OrderDetails)
                         {
                             var product = detail.Product;
-                            string imageUrl = product != null ? "/img/Product/" + product.Image : "";
+                            string imageUrl = product != null ? "/img/product/" + product.Image : "";
                             string productName = product != null ? product.Name : "Sản phẩm";
                             var matchingSize = _context.ProductSizes.FirstOrDefault(ps => ps.ProductId == detail.ProductId && ps.Price == detail.Price);
                             string sizeName = matchingSize != null && !string.IsNullOrEmpty(matchingSize.SizeName) ? matchingSize.SizeName : "";

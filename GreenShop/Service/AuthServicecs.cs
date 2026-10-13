@@ -42,7 +42,10 @@ namespace GreenShop.Service
 
             var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
-            var jwtService = new JwtService(_configuration["JWT:Secret"]!, _configuration["JWT:ValidIssuer"]!);
+            var jwtService = new JwtService(
+                _configuration["JWT:Secret"]!,
+                _configuration["JWT:ValidIssuer"]!,
+                _configuration["JWT:ValidAudience"]!);
             ////Create token
             var token = jwtService.GenerateTokenLogin(authClaims);
 
@@ -51,7 +54,10 @@ namespace GreenShop.Service
 
         public string GenerateToken(string email)
         {
-            var jwtService = new JwtService(_configuration["JWT:Secret"]!, _configuration["JWT:ValidIssuer"]!);
+            var jwtService = new JwtService(
+                _configuration["JWT:Secret"]!,
+                _configuration["JWT:ValidIssuer"]!,
+                _configuration["JWT:ValidAudience"]!);
             var token = jwtService.GenerateToken(email);
             return token;
         }

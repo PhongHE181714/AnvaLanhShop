@@ -49,11 +49,20 @@ public partial class GreenShopContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var builder = new ConfigurationBuilder()
-                       .SetBasePath(Directory.GetCurrentDirectory())
-                       .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-        IConfigurationRoot configuration = builder.Build();
-        optionsBuilder.UseSqlServer(configuration.GetConnectionString("MyConnect"));
+        if (optionsBuilder.IsConfigured)
+        {
+            return;
+        }
+
+        global::GreenShop.DotEnvFile.Load();
+        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__MyConnect");
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new InvalidOperationException(
+                "Connection string 'MyConnect' is missing. Set ConnectionStrings__MyConnect in the .env file or the system environment.");
+        }
+
+        optionsBuilder.UseSqlServer(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

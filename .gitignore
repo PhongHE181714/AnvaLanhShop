@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Local configuration may contain machine-specific credentials
+GreenShop/appsettings.Local.json
+# Local environment files may contain credentials
+.env
+.env.*
+!.env.example

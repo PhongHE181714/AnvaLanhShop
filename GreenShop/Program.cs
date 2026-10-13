@@ -1,10 +1,11 @@
-﻿using GreenShop.Hubs;
+using GreenShop.Hubs;
 using GreenShop.Models;
 using GreenShop.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -14,14 +15,34 @@ namespace GreenShop
     {
         public static void Main(string[] args)
         {
+            DotEnvFile.Load();
             var builder = WebApplication.CreateBuilder(args);
+            var appSettingsSources = builder.Configuration.Sources
+                .OfType<JsonConfigurationSource>()
+                .Where(source => Path.GetFileName(source.Path ?? string.Empty)
+                    .StartsWith("appsettings", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            foreach (var source in appSettingsSources)
+            {
+                builder.Configuration.Sources.Remove(source);
+            }
+            builder.Configuration.AddEnvironmentVariables();
+            builder.Configuration.AddCommandLine(args);
+
             builder.Services.AddScoped<AuthServicecs>();
             builder.Services.AddScoped<EmailService>();
 
             // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("MyConnect");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "Connection string 'MyConnect' is missing. Set ConnectionStrings__MyConnect in .env or the system environment.");
+            }
+
             builder.Services.AddDbContext<GreenShopContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnect"));
+                options.UseSqlServer(connectionString);
             });
             builder.Services.AddAuthentication(options =>
             {

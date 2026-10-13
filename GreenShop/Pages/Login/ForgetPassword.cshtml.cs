@@ -70,7 +70,7 @@ namespace GreenShop.Pages.Login
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to send reset email: {ex.Message}. Make sure you use a Google App Password and correct SMTP settings in appsettings.json.";
+                ErrorMessage = $"Failed to send reset email: {ex.Message}. Check the Google App Password and SMTP settings in .env.";
                 SuccessMessage = null;
             }
 

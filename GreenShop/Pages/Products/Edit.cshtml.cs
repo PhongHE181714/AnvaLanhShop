@@ -109,7 +109,7 @@ namespace GreenShop.Pages.Products
                     return BadRequest(new { message = "File size exceeds 10MB limit." });
 
                 var fileName = Guid.NewGuid().ToString() + extension;
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "Product", fileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product", fileName);
                 var dir = Path.GetDirectoryName(filePath);
                 if (dir != null && !Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
@@ -120,7 +120,7 @@ namespace GreenShop.Pages.Products
                 // Delete old image
                 if (!string.IsNullOrEmpty(productInDb.Image))
                 {
-                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "Product", productInDb.Image);
+                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product", productInDb.Image);
                     if (System.IO.File.Exists(oldPath))
                         try { System.IO.File.Delete(oldPath); } catch { }
                 }
